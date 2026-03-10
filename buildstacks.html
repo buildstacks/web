@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BuildStacks — Premium App Development Agency</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: #8B6F35;
+    --obsidian: #080808;
+    --dark: #0E0E0E;
+    --dark2: #141414;
+    --dark3: #1A1A1A;
+    --surface: #111111;
+    --white: #F7F4EF;
+    --muted: #6B6B6B;
+    --border: rgba(201,168,76,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--obsidian);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: normal;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.12s ease;
+  }
+  body:hover .cursor { opacity: 1; }
+
+  /* NOISE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    padding: 28px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid transparent;
+    transition: all 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(20px);
+    border-color: var(--border);
+    padding: 18px 60px;
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .logo-mark::before {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    background: var(--gold);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    opacity: 0.9;
+  }
+  .nav-links {
+    display: flex;
+    gap: 48px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 12px 28px;
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.3s ease;
+  }
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--obsidian);
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 60px 100px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(201,168,76,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 15% 80%, rgba(201,168,76,0.04) 0%, transparent 50%);
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hero-label::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--gold);
+  }
+  .hero-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(68px, 9vw, 140px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 1.2s ease 0.5s forwards;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.8s forwards;
+  }
+  .hero-sub {
+    max-width: 380px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.8;
+    color: rgba(247,244,239,0.55);
+    letter-spacing: 0.01em;
+  }
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--obsidian);
+    border: none;
+    padding: 18px 44px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold-light);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+  .hero-scroll {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  /* MARQUEE */
+  .marquee-section {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    overflow: hidden;
+    background: var(--dark2);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 0 40px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .marquee-dot {
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  /* SECTIONS */
+  section { padding: 140px 60px; }
+
+  .section-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(42px, 5vw, 72px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 64px;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  /* ABOUT */
+  .about { background: var(--dark2); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 120px;
+    align-items: center;
+  }
+  .about-visual {
+    position: relative;
+    height: 520px;
+  }
+  .about-card {
+    position: absolute;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    padding: 40px;
+  }
+  .about-card-main {
+    top: 0; left: 0; right: 80px; bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .about-card-accent {
+    bottom: 0; right: 0;
+    width: 240px; height: 200px;
+    background: var(--gold);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+  }
+  .about-card-accent .num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: var(--obsidian);
+    line-height: 1;
+  }
+  .about-card-accent .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: rgba(8,8,8,0.7);
+    text-transform: uppercase;
+  }
+  .card-icon {
+    width: 52px; height: 52px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 32px;
+  }
+  .card-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .card-text {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--muted);
+  }
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 32px;
+    background: var(--border);
+  }
+  .stat {
+    background: var(--dark3);
+    padding: 20px;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--gold);
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .about-text { font-size: 16px; line-height: 1.9; color: rgba(247,244,239,0.65); }
+  .about-text p + p { margin-top: 24px; }
+  .gold-line {
+    width: 60px; height: 2px;
+    background: var(--gold);
+    margin: 32px 0;
+  }
+
+  /* SERVICES */
+  .services-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 80px;
+  }
+  .services-header .section-title { margin-bottom: 0; }
+  .services-intro {
+    max-width: 340px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--muted);
+    text-align: right;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+  }
+  .service-card {
+    background: var(--dark);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    cursor: none;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.06) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-card:hover { background: var(--dark2); }
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 72px;
+    font-weight: 300;
+    color: rgba(201,168,76,0.08);
+    line-height: 1;
+    position: absolute;
+    top: 24px; right: 32px;
+  }
+  .service-icon {
+    width: 48px; height: 48px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 32px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .service-card:hover .service-icon {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .service-desc {
+    font-size: 13px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+  .service-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+  .service-card:hover .tag {
+    border-color: rgba(201,168,76,0.3);
+    color: var(--gold-dim);
+  }
+
+  /* PROCESS */
+  .process { background: var(--dark2); }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: var(--border);
+    margin-top: 80px;
+  }
+  .process-step {
+    background: var(--dark);
+    padding: 40px 32px;
+    position: relative;
+  }
+  .process-step::after {
+    content: '';
+    position: absolute;
+    top: 40px;
+    right: -1px;
+    width: 24px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+  .process-step:last-child::after { display: none; }
+  .step-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 28px;
+  }
+  .step-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .step-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+
+  /* PORTFOLIO */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 2px;
+    background: var(--border);
+    margin-top: 80px;
+  }
+  .project-card {
+    background: var(--dark);
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+  }
+  .project-card:first-child {
+    grid-row: span 2;
+    min-height: 700px;
+  }
+  .project-inner {
+    height: 100%;
+    min-height: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 48px;
+    position: relative;
+    background: linear-gradient(to bottom, transparent 0%, rgba(8,8,8,0.9) 60%);
+  }
+  .project-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.6s ease;
+  }
+  .project-card:hover .project-bg { transform: scale(1.03); }
+  .proj-bg-1 { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+  .proj-bg-2 { background: linear-gradient(135deg, #1a0a00 0%, #2d1700 50%, #451f00 100%); }
+  .proj-bg-3 { background: linear-gradient(135deg, #0a1a0a 0%, #0d2b0d 50%, #0f3f0f 100%); }
+  .proj-decoration {
+    position: absolute;
+    top: 40px; right: 40px;
+    font-size: 72px;
+    opacity: 0.08;
+  }
+  .project-cat {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.25em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .project-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    position: relative;
+    line-height: 1.2;
+  }
+  .project-card:first-child .project-name { font-size: 48px; }
+  .project-desc {
+    font-size: 13px;
+    line-height: 1.7;
+    color: rgba(247,244,239,0.55);
+    position: relative;
+    max-width: 380px;
+  }
+  .project-arrow {
+    width: 44px; height: 44px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-top: 28px;
+    position: relative;
+    transition: all 0.3s;
+    display: inline-flex;
+    color: var(--muted);
+  }
+  .project-card:hover .project-arrow {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+
+  /* TESTIMONIAL */
+  .testimonial-section {
+    background: var(--gold);
+    padding: 120px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .testimonial-section::before {
+    content: '"';
+    position: absolute;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 400px;
+    color: rgba(8,8,8,0.08);
+    top: -80px;
+    left: 40px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .testimonial-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+  .testimonial-quote {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--obsidian);
+    line-height: 1.5;
+    margin-bottom: 48px;
+  }
+  .testimonial-author {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(8,8,8,0.6);
+  }
+  .testimonial-dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 40px;
+  }
+  .t-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(8,8,8,0.25);
+    cursor: none;
+  }
+  .t-dot.active { background: var(--obsidian); width: 24px; border-radius: 3px; }
+
+  /* CTA */
+  .cta-section {
+    padding: 160px 60px;
+    text-align: center;
+    position: relative;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+  }
+  .cta-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(56px, 7vw, 110px);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 56px;
+  }
+  .cta-title em { font-style: italic; color: var(--gold); }
+  .cta-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+  }
+  .btn-outline {
+    border: 1px solid rgba(247,244,239,0.2);
+    color: rgba(247,244,239,0.6);
+    padding: 18px 44px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: none;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  .btn-outline:hover {
+    border-color: var(--white);
+    color: var(--white);
+  }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 60px 60px 40px;
+    background: var(--dark2);
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 60px;
+  }
+  .footer-brand .logo { font-size: 30px; margin-bottom: 16px; }
+  .footer-tagline {
+    font-size: 13px;
+    color: var(--muted);
+    max-width: 260px;
+    line-height: 1.7;
+  }
+  .footer-links { display: flex; gap: 80px; }
+  .footer-col h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 14px;
+    transition: color 0.3s;
+  }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+  .footer-socials {
+    display: flex;
+    gap: 16px;
+  }
+  .social-link {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s;
+  }
+  .social-link:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--obsidian); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="logo">
+    <div class="logo-mark"></div>
+    BuildStacks
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#about">About</a></li>
+  </ul>
+  <button class="nav-cta">Get in Touch</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-label">Est. 2024 &nbsp;·&nbsp; Premium App Studio</div>
+  <h1 class="hero-headline">
+    We Build<br/><em>Digital</em><br/>Empires.
+  </h1>
+  <div class="hero-bottom">
+    <p class="hero-sub">
+      BuildStacks is a boutique app development agency crafting premium mobile & web experiences for brands that refuse to be ordinary.
+    </p>
+    <div class="hero-actions">
+      <a href="#work" class="btn-primary"><span>Explore Our Work ↗</span></a>
+      <div class="hero-scroll">
+        <div class="scroll-line"></div>
+        Scroll to discover
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track" id="marqueeTrack">
+    <span class="marquee-item"><span class="marquee-dot"></span>iOS Development</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Android Apps</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Web Platforms</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>UI/UX Design</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>MVP Builds</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Firebase & Cloud</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Payment Integration</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Scale Architecture</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>iOS Development</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Android Apps</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Web Platforms</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>UI/UX Design</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>MVP Builds</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Firebase & Cloud</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Payment Integration</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Scale Architecture</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="about-grid">
+    <div class="about-visual reveal">
+      <div class="about-card about-card-main">
+        <div>
+          <div class="card-icon">⬡</div>
+          <div class="card-title">Engineered for Impact</div>
+          <div class="card-text">Every pixel deliberate. Every interaction considered. Every line of code purposeful.</div>
+        </div>
+        <div class="about-stats">
+          <div class="stat">
+            <div class="stat-num">40+</div>
+            <div class="stat-label">Apps Shipped</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">98%</div>
+            <div class="stat-label">Client Satisfaction</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">8</div>
+            <div class="stat-label">Industries</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">3x</div>
+            <div class="stat-label">Avg. ROI</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-card about-card-accent">
+        <div class="num">8+</div>
+        <div class="label">Years Combined Expertise</div>
+      </div>
+    </div>
+    <div class="reveal" style="transition-delay: 0.2s;">
+      <div class="section-tag">About BuildStacks</div>
+      <h2 class="section-title">Where Strategy Meets <em>Craft</em></h2>
+      <div class="gold-line"></div>
+      <div class="about-text">
+        <p>BuildStacks is not your average development shop. We are a curated collective of product thinkers, designers, and engineers who obsess over the intersection of beauty and function.</p>
+        <p>From zero to launch, we architect digital products that don't just work — they captivate. Our clients come to us when ordinary isn't an option.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header reveal">
+    <div>
+      <div class="section-tag">What We Do</div>
+      <h2 class="section-title">Our <em>Expertise</em></h2>
+    </div>
+    <p class="services-intro">End-to-end product development with meticulous attention to craft, performance, and lasting impact.</p>
+  </div>
+  <div class="services-grid reveal" style="transition-delay: 0.1s;">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-icon">📱</div>
+      <div class="service-name">Mobile App Development</div>
+      <p class="service-desc">Native iOS and Android experiences that feel intuitive, perform flawlessly, and delight at every touch point.</p>
+      <div class="service-tags">
+        <span class="tag">Swift</span>
+        <span class="tag">Kotlin</span>
+        <span class="tag">Flutter</span>
+        <span class="tag">React Native</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-icon">🌐</div>
+      <div class="service-name">Web Platform Design</div>
+      <p class="service-desc">Scalable, beautiful web applications engineered with modern stacks that grow alongside your ambitions.</p>
+      <div class="service-tags">
+        <span class="tag">React</span>
+        <span class="tag">Next.js</span>
+        <span class="tag">Node.js</span>
+        <span class="tag">Firebase</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-icon">✦</div>
+      <div class="service-name">UI/UX & Brand Design</div>
+      <p class="service-desc">Design systems and visual identities that communicate authority, elevate perception, and convert users into advocates.</p>
+      <div class="service-tags">
+        <span class="tag">Figma</span>
+        <span class="tag">Design Systems</span>
+        <span class="tag">Prototyping</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-icon">⚡</div>
+      <div class="service-name">MVP & Rapid Launch</div>
+      <p class="service-desc">Validate your idea fast. We strip complexity, retain quality, and get you to market before your window closes.</p>
+      <div class="service-tags">
+        <span class="tag">4–8 Weeks</span>
+        <span class="tag">Lean Build</span>
+        <span class="tag">Launch Ready</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-icon">🔗</div>
+      <div class="service-name">API & Integration</div>
+      <p class="service-desc">Seamless third-party integrations, payment gateways, and custom backend APIs that form the spine of your product.</p>
+      <div class="service-tags">
+        <span class="tag">REST</span>
+        <span class="tag">GraphQL</span>
+        <span class="tag">Payments</span>
+        <span class="tag">Auth</span>
+      </div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-icon">🛡</div>
+      <div class="service-name">Growth & Maintenance</div>
+      <p class="service-desc">Post-launch, we don't disappear. Ongoing support, performance tuning, and feature evolution as your user base scales.</p>
+      <div class="service-tags">
+        <span class="tag">Analytics</span>
+        <span class="tag">Monitoring</span>
+        <span class="tag">Iterations</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="reveal">
+    <div class="section-tag">How We Work</div>
+    <h2 class="section-title">A Process Built for<br/><em>Precision</em></h2>
+  </div>
+  <div class="process-steps reveal" style="transition-delay: 0.15s;">
+    <div class="process-step">
+      <div class="step-num">Step 01</div>
+      <div class="step-name">Discovery & Strategy</div>
+      <p class="step-desc">We deep-dive into your vision, users, and market. No assumptions — only clarity.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">Step 02</div>
+      <div class="step-name">Design & Prototype</div>
+      <p class="step-desc">High-fidelity wireframes and interactive prototypes before a line of code is written.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">Step 03</div>
+      <div class="step-name">Build & Iterate</div>
+      <p class="step-desc">Agile sprints with real-time updates. You see progress weekly, not at the end.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">Step 04</div>
+      <div class="step-name">Launch & Scale</div>
+      <p class="step-desc">Thorough QA, store submission, launch support, and a roadmap for what comes next.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="work">
+  <div class="reveal">
+    <div class="section-tag">Featured Work</div>
+    <h2 class="section-title">Products We're<br/><em>Proud</em> Of</h2>
+  </div>
+  <div class="portfolio-grid reveal" style="transition-delay: 0.1s;">
+    <div class="project-card">
+      <div class="project-bg proj-bg-1"></div>
+      <div class="proj-decoration">💪</div>
+      <div class="project-inner">
+        <div class="project-cat">Health & Fitness</div>
+        <div class="project-name">IronForge<br/>Coaching App</div>
+        <p class="project-desc">Bespoke gym coaching platform with per-member video assignment, real-time progress tracking, and seamless UPI payment integration.</p>
+        <div class="project-arrow">↗</div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-bg proj-bg-2"></div>
+      <div class="proj-decoration">🛒</div>
+      <div class="project-inner">
+        <div class="project-cat">E-Commerce</div>
+        <div class="project-name">Luxe Marketplace</div>
+        <p class="project-desc">Premium multi-vendor marketplace with AI-driven recommendations and luxury brand partnerships.</p>
+        <div class="project-arrow">↗</div>
+      </div>
+    </div>
+    <div class="project-card">
+      <div class="project-bg proj-bg-3"></div>
+      <div class="proj-decoration">📊</div>
+      <div class="project-inner">
+        <div class="project-cat">FinTech</div>
+        <div class="project-name">WealthTrack Pro</div>
+        <p class="project-desc">Real-time portfolio tracker with smart alerts, tax optimization insights, and broker API sync.</p>
+        <div class="project-arrow">↗</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<div class="testimonial-section">
+  <div class="testimonial-inner">
+    <p class="testimonial-quote" id="testimonialQuote">
+      "BuildStacks didn't just build our app — they transformed the way we think about our product. The attention to detail was unlike anything we'd experienced."
+    </p>
+    <div class="testimonial-author" id="testimonialAuthor">— Arjun Mehta, Founder of IronForge</div>
+    <div class="testimonial-dots">
+      <div class="t-dot active" onclick="setTestimonial(0)"></div>
+      <div class="t-dot" onclick="setTestimonial(1)"></div>
+      <div class="t-dot" onclick="setTestimonial(2)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-eyebrow reveal">Ready to Begin?</div>
+  <h2 class="cta-title reveal" style="transition-delay:0.1s">
+    Let's Build<br/>Something <em>Legendary.</em>
+  </h2>
+  <div class="cta-actions reveal" style="transition-delay:0.2s">
+    <a href="mailto:hello@buildstacks.io" class="btn-primary"><span>Start a Project ↗</span></a>
+    <a href="#work" class="btn-outline">View Portfolio</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-mark"></div>
+        BuildStacks
+      </div>
+      <p class="footer-tagline">Boutique app development for brands that refuse to be ordinary.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="#">Mobile Apps</a>
+        <a href="#">Web Platforms</a>
+        <a href="#">UI/UX Design</a>
+        <a href="#">MVP Launch</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Our Work</a>
+        <a href="#">Process</a>
+        <a href="#">Contact</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="#">hello@buildstacks.io</a>
+        <a href="#">+91 98765 43210</a>
+        <a href="#">Mumbai, India</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 BuildStacks. All rights reserved.</div>
+    <div class="footer-socials">
+      <a href="#" class="social-link">𝕏</a>
+      <a href="#" class="social-link">in</a>
+      <a href="#" class="social-link">ig</a>
+      <a href="#" class="social-link">▶</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  document.querySelectorAll('a, button, .service-card, .project-card, .t-dot').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+      ring.style.width = '60px';
+      ring.style.height = '60px';
+      ring.style.borderColor = 'rgba(201,168,76,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      ring.style.width = '40px';
+      ring.style.height = '40px';
+      ring.style.borderColor = 'rgba(201,168,76,0.5)';
+    });
+  });
+
+  // NAV SCROLL
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // REVEAL ON SCROLL
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // TESTIMONIALS
+  const testimonials = [
+    { quote: '"BuildStacks didn\'t just build our app — they transformed the way we think about our product. The attention to detail was unlike anything we\'d experienced."', author: '— Arjun Mehta, Founder of IronForge' },
+    { quote: '"From concept to App Store in 6 weeks. The team at BuildStacks operates at a level that\'s simply rare to find anywhere."', author: '— Priya Sharma, CEO of LuxeMarket' },
+    { quote: '"Our app has 50,000 active users and zero critical bugs post-launch. That\'s the BuildStacks standard."', author: '— Rohan Kapoor, WealthTrack Pro' }
+  ];
+  let activeT = 0;
+  function setTestimonial(i) {
+    activeT = i;
+    const q = document.getElementById('testimonialQuote');
+    const a = document.getElementById('testimonialAuthor');
+    q.style.opacity = '0';
+    a.style.opacity = '0';
+    setTimeout(() => {
+      q.textContent = testimonials[i].quote;
+      a.textContent = testimonials[i].author;
+      q.style.transition = a.style.transition = 'opacity 0.5s';
+      q.style.opacity = a.style.opacity = '1';
+    }, 300);
+    document.querySelectorAll('.t-dot').forEach((d, idx) => {
+      d.classList.toggle('active', idx === i);
+    });
+  }
+  setInterval(() => setTestimonial((activeT + 1) % 3), 5000);
+</script>
+</body>
+</html>
