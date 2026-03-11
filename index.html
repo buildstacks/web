@@ -1,0 +1,2373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BuildStacks — Premium App Development Agency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: #8B6F35;
+    --obsidian: #080808;
+    --dark: #0E0E0E;
+    --dark2: #141414;
+    --dark3: #1A1A1A;
+    --surface: #111111;
+    --white: #F7F4EF;
+    --muted: #6B6B6B;
+    --border: rgba(201,168,76,0.15);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--obsidian);
+    color: var(--white);
+    font-family: 'Syne', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+    overflow-x: hidden;
+    cursor: none;
+  }
+  @media (hover: none) {
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none !important; }
+  }
+
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background 0.2s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 40px; height: 40px;
+    border: 1px solid rgba(201,168,76,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: all 0.12s ease;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 500;
+    padding: 28px 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid transparent;
+    transition: all 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(20px);
+    border-color: var(--border);
+    padding: 18px 60px;
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-mark {
+    width: 32px; height: 32px;
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .logo-mark::before {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    background: var(--gold);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+    opacity: 0.9;
+  }
+  .nav-links {
+    display: flex;
+    gap: 48px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+    transform-origin: left;
+  }
+  .nav-links a:hover { color: var(--gold); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .nav-cta {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    padding: 12px 28px;
+    font-family: 'Syne', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: inherit;
+    transition: all 0.3s ease;
+  }
+  .nav-cta:hover {
+    background: var(--gold);
+    color: var(--obsidian);
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 120px 60px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    width: 100%;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.3s forwards;
+  }
+  .hero-text-col {
+    display: flex;
+    flex-direction: column;
+  }
+  .hero-visual-col {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+  .hero-phone-wrap {
+    position: relative;
+    width: 280px;
+    animation: phoneFloat 6s ease-in-out infinite;
+  }
+  @keyframes phoneFloat {
+    0%, 100% { transform: translateY(0px) rotate(-2deg); }
+    50% { transform: translateY(-18px) rotate(-2deg); }
+  }
+  .hero-phone-svg {
+    width: 100%;
+    filter: drop-shadow(0 40px 80px rgba(201,168,76,0.12)) drop-shadow(0 0 1px rgba(201,168,76,0.3));
+  }
+  /* Floating badges */
+  .hero-badge {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(14,14,14,0.92);
+    border: 1px solid rgba(201,168,76,0.25);
+    backdrop-filter: blur(12px);
+    padding: 10px 16px;
+    white-space: nowrap;
+  }
+  .hb-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(201,168,76,0.8);
+  }
+  .hb-text {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: rgba(247,244,239,0.75);
+    text-transform: uppercase;
+  }
+  .hero-badge-1 {
+    top: 10%;
+    right: -20px;
+    animation: badgeFloat 5s ease-in-out 0.5s infinite;
+  }
+  .hero-badge-2 {
+    bottom: 22%;
+    left: -30px;
+    animation: badgeFloat 5s ease-in-out 1.2s infinite;
+  }
+  .hero-badge-3 {
+    bottom: 8%;
+    right: -10px;
+    animation: badgeFloat 5s ease-in-out 2s infinite;
+  }
+  @keyframes badgeFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: 
+      radial-gradient(ellipse 60% 50% at 70% 40%, rgba(201,168,76,0.07) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 60% at 15% 80%, rgba(201,168,76,0.04) 0%, transparent 50%);
+  }
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 80px 80px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .hero-label::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: var(--gold);
+  }
+  .hero-headline {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: clamp(52px, 7vw, 110px);
+    font-weight: 300;
+    line-height: 0.92;
+    letter-spacing: -0.02em;
+    margin-bottom: 32px;
+  }
+  .hero-headline em { font-style: italic; color: var(--gold); }
+  .hero-sub {
+    max-width: 420px;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 1.8;
+    color: rgba(247,244,239,0.55);
+    letter-spacing: 0.01em;
+  }
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20px;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--obsidian);
+    border: none;
+    padding: 18px 44px;
+    font-family: 'Syne', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: inherit;
+    transition: all 0.3s ease;
+    display: inline-block;
+    text-decoration: none;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gold-light);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+  .btn-primary:hover::before { transform: translateX(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+  .hero-scroll {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    animation: scrollPulse 2s ease infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+  }
+
+  .marquee-section {
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0;
+    overflow: hidden;
+    background: var(--dark2);
+  }
+  .marquee-track {
+    display: flex;
+    animation: marquee 25s linear infinite;
+    white-space: nowrap;
+  }
+  .marquee-item {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    padding: 0 40px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+  .marquee-dot {
+    width: 5px; height: 5px;
+    background: var(--gold);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  section { padding: 140px 60px; }
+
+  .section-tag {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-tag::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold);
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: clamp(42px, 5vw, 72px);
+    font-weight: 300;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 64px;
+  }
+  .section-title em { font-style: italic; color: var(--gold); }
+
+  .about { background: var(--dark2); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 120px;
+    align-items: center;
+  }
+  .about-visual { position: relative; height: 520px; }
+  .about-card {
+    position: absolute;
+    background: var(--dark3);
+    border: 1px solid var(--border);
+    padding: 40px;
+  }
+  .about-card-main {
+    top: 0; left: 0; right: 80px; bottom: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .about-card-accent {
+    bottom: 0; right: 0;
+    width: 240px; height: 200px;
+    background: var(--gold);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 24px;
+  }
+  .about-card-accent .num {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 64px;
+    font-weight: 300;
+    color: var(--obsidian);
+    line-height: 1;
+  }
+  .about-card-accent .label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: rgba(8,8,8,0.7);
+    text-transform: uppercase;
+  }
+  .card-icon {
+    width: 52px; height: 52px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    margin-bottom: 32px;
+  }
+  .card-title {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .card-text { font-size: 13px; line-height: 1.8; color: var(--muted); }
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    margin-top: 32px;
+    background: var(--border);
+  }
+  .stat { background: var(--dark3); padding: 20px; }
+  .stat-num {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 36px;
+    font-weight: 300;
+    color: var(--gold);
+  }
+  .stat-label {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .about-text { font-size: 16px; line-height: 1.9; color: rgba(247,244,239,0.65); }
+  .about-text p + p { margin-top: 24px; }
+  .gold-line { width: 60px; height: 2px; background: var(--gold); margin: 32px 0; }
+
+  .services-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 80px;
+  }
+  .services-header .section-title { margin-bottom: 0; }
+  .services-intro {
+    max-width: 340px;
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--muted);
+    text-align: right;
+  }
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+    background: var(--border);
+  }
+  .service-card {
+    background: var(--dark);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
+    cursor: inherit;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.06) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .service-card:hover::before { opacity: 1; }
+  .service-card:hover { background: var(--dark2); }
+  .service-num {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 72px;
+    font-weight: 300;
+    color: rgba(201,168,76,0.08);
+    line-height: 1;
+    position: absolute;
+    top: 24px; right: 32px;
+  }
+  .service-icon {
+    width: 48px; height: 48px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 32px;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  .service-card:hover .service-icon {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.1);
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 26px;
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .service-desc { font-size: 13px; line-height: 1.8; color: var(--muted); margin-bottom: 32px; }
+  .service-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    padding: 5px 12px;
+    color: var(--muted);
+    transition: all 0.3s;
+  }
+  .service-card:hover .tag { border-color: rgba(201,168,76,0.3); color: var(--gold-dim); }
+
+  /* FANCY SERVICE CARDS */
+  .service-card-fancy {
+    padding-top: 32px;
+  }
+  .fancy-visual {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .fancy-svg {
+    width: 100%;
+    border-radius: 6px;
+    transition: transform 0.4s ease, filter 0.4s ease;
+    filter: drop-shadow(0 8px 24px rgba(0,0,0,0.6));
+  }
+  .fancy-svg-phone {
+    max-width: 140px;
+    margin: 0 auto;
+    display: block;
+    filter: drop-shadow(0 12px 32px rgba(201,168,76,0.1)) drop-shadow(0 0 1px rgba(201,168,76,0.25));
+  }
+  .fancy-svg-browser {
+    filter: drop-shadow(0 8px 20px rgba(0,0,0,0.7)) drop-shadow(0 0 1px rgba(201,168,76,0.2));
+  }
+  .fancy-svg-preview {
+    filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  }
+  .service-card-fancy:hover .fancy-svg-phone {
+    transform: scale(1.04) rotate(1deg);
+    filter: drop-shadow(0 16px 40px rgba(201,168,76,0.18)) drop-shadow(0 0 1px rgba(201,168,76,0.4));
+  }
+  .service-card-fancy:hover .fancy-svg-browser {
+    transform: translateY(-4px);
+    filter: drop-shadow(0 12px 28px rgba(0,0,0,0.8)) drop-shadow(0 0 1px rgba(201,168,76,0.35));
+  }
+  .service-card-fancy:hover .fancy-svg-preview {
+    transform: translateY(-2px);
+  }
+
+  .process { background: var(--dark2); }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    background: var(--border);
+    margin-top: 80px;
+  }
+  .process-step { background: var(--dark); padding: 40px 32px; position: relative; }
+  .process-step::after {
+    content: '';
+    position: absolute;
+    top: 40px; right: -1px;
+    width: 24px; height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+  .process-step:last-child::after { display: none; }
+  .step-num {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 28px;
+  }
+  .step-name {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    line-height: 1.2;
+  }
+  .step-desc { font-size: 13px; line-height: 1.7; color: var(--muted); }
+
+  /* PORTFOLIO — IMAGE-FIRST */
+  .portfolio-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    grid-template-rows: 420px 420px;
+    gap: 3px;
+    background: var(--border);
+    margin-top: 80px;
+  }
+  .project-card {
+    background: var(--dark);
+    position: relative;
+    overflow: hidden;
+    cursor: inherit;
+  }
+  .project-card:first-child { grid-row: span 2; }
+
+  /* Real photo backgrounds */
+  .project-card .project-photo {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .project-card:hover .project-photo {
+    transform: scale(1.04);
+  }
+
+  /* IronForge — moody gym scene with weights/equipment feel */
+  .photo-ironforge {
+    background:
+      radial-gradient(ellipse 60% 40% at 30% 60%, rgba(180,60,20,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 80% 60% at 70% 30%, rgba(201,168,76,0.10) 0%, transparent 55%),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 38px,
+        rgba(255,255,255,0.018) 38px,
+        rgba(255,255,255,0.018) 40px
+      ),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 38px,
+        rgba(255,255,255,0.018) 38px,
+        rgba(255,255,255,0.018) 40px
+      ),
+      linear-gradient(160deg, #0a0505 0%, #1a0e08 30%, #0f0a0a 55%, #050505 100%);
+    overflow: hidden;
+  }
+  .photo-ironforge::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle 180px at 25% 40%, rgba(201,90,30,0.12) 0%, transparent 70%),
+      radial-gradient(circle 120px at 75% 65%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  }
+  /* Barbell silhouette */
+  .photo-ironforge::after {
+    content: '';
+    position: absolute;
+    top: 38%; left: 50%;
+    transform: translateX(-50%);
+    width: 75%; height: 8px;
+    background: linear-gradient(90deg, transparent 0%, rgba(160,140,100,0.25) 8%, rgba(200,180,120,0.45) 20%, rgba(200,180,120,0.45) 80%, rgba(160,140,100,0.25) 92%, transparent 100%);
+    border-radius: 4px;
+    box-shadow: 0 0 30px rgba(201,168,76,0.1);
+  }
+
+  /* Luxe Marketplace — editorial luxury fashion feel */
+  .photo-luxe {
+    background:
+      radial-gradient(ellipse 50% 70% at 65% 35%, rgba(201,168,76,0.12) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 50% at 20% 70%, rgba(180,160,200,0.08) 0%, transparent 55%),
+      repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 28px,
+        rgba(201,168,76,0.025) 28px,
+        rgba(201,168,76,0.025) 29px
+      ),
+      linear-gradient(145deg, #0c0a0e 0%, #14101a 35%, #0e0c10 60%, #080608 100%);
+    overflow: hidden;
+  }
+  .photo-luxe::before {
+    content: '';
+    position: absolute;
+    top: 15%; right: 18%;
+    width: 160px; height: 220px;
+    border: 1px solid rgba(201,168,76,0.2);
+    background: linear-gradient(145deg, rgba(201,168,76,0.06) 0%, rgba(160,130,180,0.04) 100%);
+    transform: rotate(-4deg);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4), inset 0 0 30px rgba(201,168,76,0.04);
+  }
+  .photo-luxe::after {
+    content: '';
+    position: absolute;
+    top: 20%; right: 22%;
+    width: 140px; height: 200px;
+    border: 1px solid rgba(201,168,76,0.12);
+    background: linear-gradient(160deg, rgba(201,168,76,0.08) 0%, transparent 60%);
+    transform: rotate(3deg);
+  }
+
+  /* WealthTrack — dark finance data terminal feel */
+  .photo-wealth {
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 50%, rgba(20,80,40,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 30% at 80% 20%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      linear-gradient(160deg, #050a06 0%, #080f0a 30%, #060a07 60%, #030503 100%);
+    overflow: hidden;
+  }
+  .photo-wealth::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 14px,
+        rgba(30,200,80,0.04) 14px,
+        rgba(30,200,80,0.04) 15px
+      );
+  }
+  .photo-wealth::after {
+    content: '';
+    position: absolute;
+    bottom: 30%; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(30,200,80,0.15) 5%,
+      rgba(30,200,80,0.3) 15%,
+      rgba(201,168,76,0.5) 35%,
+      rgba(30,200,80,0.4) 55%,
+      rgba(30,200,80,0.2) 75%,
+      rgba(30,200,80,0.3) 85%,
+      rgba(30,200,80,0.15) 95%,
+      transparent 100%
+    );
+    filter: blur(0.5px);
+    box-shadow: 0 0 20px rgba(30,200,80,0.15);
+  }
+
+  /* Gold gradient overlay on top of photo */
+  .project-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(8,8,8,0.96) 0%,
+      rgba(8,8,8,0.6) 45%,
+      rgba(8,8,8,0.1) 100%
+    );
+    pointer-events: none;
+  }
+  /* Gold shimmer on hover */
+  .project-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.5s;
+    z-index: 2;
+    pointer-events: none;
+  }
+  .project-card:hover::before { opacity: 1; }
+
+  .project-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 44px;
+    z-index: 3;
+  }
+  .project-cat {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .project-cat::before {
+    content: '';
+    width: 24px; height: 1px;
+    background: var(--gold);
+  }
+  .project-name {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 34px;
+    font-weight: 400;
+    margin-bottom: 12px;
+    line-height: 1.15;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
+  }
+  .project-card:first-child .project-name { font-size: 52px; }
+  .project-desc {
+    font-size: 13px;
+    line-height: 1.75;
+    color: rgba(247,244,239,0.65);
+    max-width: 400px;
+    margin-bottom: 28px;
+  }
+  .project-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid rgba(201,168,76,0.4);
+    padding: 8px 18px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: rgba(201,168,76,0.06);
+    backdrop-filter: blur(8px);
+    transition: all 0.3s;
+  }
+  .project-card:hover .project-badge {
+    background: rgba(201,168,76,0.15);
+    border-color: var(--gold);
+  }
+  .project-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+  }
+
+  /* Top-right label badge */
+  .project-year {
+    position: absolute;
+    top: 28px; right: 28px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    color: rgba(247,244,239,0.4);
+    text-transform: uppercase;
+    z-index: 3;
+  }
+
+  /* Testimonial */
+  .testimonial-section {
+    background: var(--gold);
+    padding: 120px 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .testimonial-section::before {
+    content: '"';
+    position: absolute;
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 400px;
+    color: rgba(8,8,8,0.08);
+    top: -80px; left: 40px;
+    line-height: 1;
+    pointer-events: none;
+  }
+  .testimonial-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+    position: relative;
+  }
+  .testimonial-quote {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: clamp(28px, 3.5vw, 48px);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--obsidian);
+    line-height: 1.5;
+    margin-bottom: 48px;
+  }
+  .testimonial-author {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(8,8,8,0.6);
+  }
+  .testimonial-dots { display: flex; justify-content: center; gap: 8px; margin-top: 40px; }
+  .t-dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(8,8,8,0.25); cursor: none; }
+  .t-dot.active { background: var(--obsidian); width: 24px; border-radius: 3px; }
+
+  /* CTA */
+  .cta-section {
+    padding: 160px 60px;
+    text-align: center;
+    position: relative;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(201,168,76,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .cta-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 32px;
+  }
+  .cta-title {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: clamp(56px, 7vw, 110px);
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    margin-bottom: 56px;
+  }
+  .cta-title em { font-style: italic; color: var(--gold); }
+  .cta-actions { display: flex; justify-content: center; gap: 20px; align-items: center; }
+  .btn-outline {
+    border: 1px solid rgba(247,244,239,0.2);
+    color: rgba(247,244,239,0.6);
+    padding: 18px 44px;
+    font-family: 'Syne', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    cursor: inherit;
+    text-decoration: none;
+    transition: all 0.3s;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--white); color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 60px 60px 40px;
+    background: var(--dark2);
+  }
+  .footer-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 60px;
+  }
+  .footer-brand .logo { font-size: 30px; margin-bottom: 16px; }
+  .footer-tagline { font-size: 13px; color: var(--muted); max-width: 260px; line-height: 1.7; }
+  .footer-links { display: flex; gap: 80px; }
+  .footer-col h4 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 24px;
+  }
+  .footer-col a {
+    display: block;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 14px;
+    margin-bottom: 14px;
+    transition: color 0.3s;
+  }
+  .footer-col a:hover { color: var(--white); }
+  .footer-col span {
+    display: block;
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 14px;
+  }
+  .footer-bottom {
+    border-top: 1px solid var(--border);
+    padding-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-copy { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; }
+  .footer-socials { display: flex; gap: 16px; }
+  .social-link {
+    width: 36px; height: 36px;
+    border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--muted);
+    font-size: 14px;
+    transition: all 0.3s;
+  }
+  .social-link:hover { border-color: var(--gold); color: var(--gold); }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .reveal {
+    opacity: 0;
+    transform: translateY(36px);
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--obsidian); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); }
+
+  /* HAMBURGER */
+  .hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    cursor: pointer;
+    z-index: 600;
+  }
+  .hamburger span {
+    display: block;
+    width: 22px; height: 1.5px;
+    background: var(--gold);
+    transition: all 0.3s ease;
+  }
+  .hamburger.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .hamburger.open span:nth-child(2) { opacity: 0; }
+  .hamburger.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(8,8,8,0.98);
+    backdrop-filter: blur(20px);
+    z-index: 499;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    font-family: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    font-size: 42px;
+    font-weight: 300;
+    color: rgba(247,244,239,0.7);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: color 0.3s;
+  }
+  .mobile-menu a:hover { color: var(--gold); }
+  .mobile-menu .mobile-cta {
+    font-family: 'Syne', 'Trebuchet MS', 'Segoe UI', Arial, sans-serif;
+    font-size: 13px !important;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: var(--gold);
+    color: var(--obsidian) !important;
+    padding: 16px 40px;
+    margin-top: 16px;
+  }
+
+  /* ===================== MOBILE RESPONSIVE ===================== */
+  @media (max-width: 768px) {
+
+    /* Hide custom cursor on touch devices */
+    .cursor, .cursor-ring { display: none; }
+    body { cursor: auto; font-size: 14px; }
+
+    /* NAV */
+    nav { padding: 16px 18px; }
+    nav.scrolled { padding: 12px 18px; }
+    .logo { font-size: 20px; }
+    .logo-mark { width: 26px; height: 26px; }
+    .nav-links { display: none; }
+    .nav-cta { display: none !important; }
+    .hamburger { display: flex !important; }
+
+    /* HERO */
+    .hero { padding: 88px 18px 48px; min-height: 100svh; }
+    .hero-split {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+    .hero-visual-col { order: -1; }
+    .hero-phone-wrap { width: 160px; margin: 0 auto; }
+    .hero-label { font-size: 9px; letter-spacing: 0.2em; margin-bottom: 20px; }
+    .hero-headline { font-size: clamp(38px, 10vw, 56px); margin-bottom: 16px; line-height: 0.95; }
+    .hero-sub { font-size: 13px; line-height: 1.7; }
+    .hero-actions { margin-top: 28px !important; }
+    .hero-badge-1 { top: -8px; right: -8px; }
+    .hero-badge-2 { bottom: 30%; left: -8px; }
+    .hero-badge-3 { bottom: 2%; right: -4px; }
+    .hb-text { font-size: 9px; }
+    .hero-badge { padding: 6px 10px; gap: 5px; }
+    .hero-scroll { display: none; }
+
+    /* SECTIONS */
+    section { padding: 60px 18px; }
+
+    /* MARQUEE */
+    .marquee-item { padding: 0 18px; font-size: 10px; gap: 16px; }
+
+    /* ABOUT */
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 36px;
+    }
+    .about-visual { height: 320px; }
+    .about-card-main { right: 60px; bottom: 60px; padding: 24px; }
+    .about-card-accent { width: 150px; height: 140px; padding: 16px; }
+    .about-card-accent .num { font-size: 40px; }
+    .about-card-accent .label { font-size: 9px; }
+    .card-title { font-size: 22px; }
+    .card-text { font-size: 12px; }
+    .about-text { font-size: 14px; }
+    .stat-num { font-size: 28px; }
+    .stat-label { font-size: 10px; }
+
+    /* SERVICES */
+    .services-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+    .services-intro { text-align: left; max-width: 100%; font-size: 13px; }
+    .services-grid {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+    .service-card { padding: 28px 20px; }
+    .service-name { font-size: 22px; }
+    .service-desc { font-size: 12px; margin-bottom: 20px; }
+    .service-num { font-size: 52px; }
+    .fancy-svg-phone { max-width: 100px; }
+
+    /* PROCESS */
+    .process-steps {
+      grid-template-columns: 1fr;
+      gap: 2px;
+      margin-top: 40px;
+    }
+    .process-step { padding: 28px 20px; }
+    .process-step::after { display: none; }
+    .step-name { font-size: 18px; }
+    .step-desc { font-size: 12px; }
+
+    /* PORTFOLIO */
+    .portfolio-grid {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto;
+      gap: 3px;
+      margin-top: 40px;
+    }
+    .project-card:first-child {
+      grid-row: span 1;
+      min-height: 300px;
+    }
+    .project-card { min-height: 240px; }
+    .project-card:first-child .project-name { font-size: 28px; }
+    .project-name { font-size: 22px; }
+    .project-inner { padding: 20px; }
+    .project-desc { font-size: 12px; margin-bottom: 16px; }
+
+    /* TESTIMONIAL */
+    .testimonial-section { padding: 60px 18px; }
+    .testimonial-quote { font-size: clamp(18px, 5vw, 26px); margin-bottom: 28px; }
+    .testimonial-author { font-size: 11px; }
+
+    /* CTA */
+    .cta-section { padding: 80px 18px; }
+    .cta-eyebrow { font-size: 10px; margin-bottom: 20px; }
+    .cta-title { font-size: clamp(36px, 10vw, 60px); margin-bottom: 36px; }
+    .cta-actions { flex-direction: column; gap: 12px; align-items: stretch; }
+    .btn-primary, .btn-outline {
+      text-align: center;
+      padding: 14px 24px;
+      font-size: 12px;
+    }
+
+    /* FOOTER */
+    footer { padding: 40px 18px 28px; }
+    .footer-brand .logo { font-size: 22px; }
+    .footer-tagline { font-size: 12px; }
+    .footer-top {
+      flex-direction: column;
+      gap: 32px;
+    }
+    .footer-links {
+      flex-direction: column;
+      gap: 28px;
+    }
+    .footer-col h4 { font-size: 10px; margin-bottom: 16px; }
+    .footer-col a, .footer-col span { font-size: 13px; margin-bottom: 10px; }
+    .footer-bottom {
+      flex-direction: column;
+      gap: 16px;
+      text-align: center;
+    }
+    .footer-copy { font-size: 11px; }
+
+    /* Section titles */
+    .section-title { font-size: clamp(28px, 8vw, 44px); margin-bottom: 40px; }
+    .section-tag { font-size: 10px; }
+
+    /* Mobile menu links bigger tap targets */
+    .mobile-menu a { font-size: 34px; }
+  }
+
+  /* Small Android phones (360px and below) */
+  @media (max-width: 390px) {
+    .hero-headline { font-size: clamp(32px, 9vw, 44px); }
+    .hero-phone-wrap { width: 140px; }
+    .hero-badge { display: none; }
+    .about-visual { height: 280px; }
+    .about-card-accent { width: 130px; height: 120px; }
+    .section-title { font-size: clamp(26px, 8vw, 38px); }
+  }
+
+  /* Tablet */
+  @media (min-width: 769px) and (max-width: 1100px) {
+    nav { padding: 22px 36px; }
+    .hero { padding: 100px 36px 70px; }
+    section { padding: 100px 36px; }
+    .services-grid { grid-template-columns: repeat(2, 1fr); }
+    .about-grid { gap: 60px; }
+    .portfolio-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .project-card:first-child { grid-row: span 1; min-height: 420px; }
+    .footer-links { gap: 40px; }
+    .process-steps { grid-template-columns: repeat(2, 1fr); }
+    .process-step:nth-child(2)::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="logo">
+    <div class="logo-mark"></div>
+    BuildStacks
+  </div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#process">Process</a></li>
+
+  </ul>
+  <button class="nav-cta" style="display:none" id="desktopCta">Get in Touch</button>
+  <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- Mobile menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" onclick="toggleMenu()">Services</a>
+  <a href="#work" onclick="toggleMenu()">Work</a>
+  <a href="#process" onclick="toggleMenu()">Process</a>
+
+  <a href="#work" class="mobile-cta" onclick="toggleMenu()">Get in Touch</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-split">
+    <!-- LEFT: Text -->
+    <div class="hero-text-col">
+      <div class="hero-label">Est. 2024 &nbsp;·&nbsp; Premium App Studio</div>
+      <h1 class="hero-headline">
+        We Build<br/><em>Digital</em><br/>Empires.
+      </h1>
+      <p class="hero-sub">BuildStacks is a boutique app development agency crafting premium mobile & web experiences for brands that refuse to be ordinary.</p>
+      <div class="hero-actions" style="align-items:flex-start; margin-top:40px;">
+        <a href="#work" class="btn-primary"><span>Explore Our Work ↗</span></a>
+        <div class="hero-scroll" style="margin-top:24px;">
+          <div class="scroll-line"></div>
+          Scroll to discover
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: Phone Mockup SVG -->
+    <div class="hero-visual-col">
+      <div class="hero-phone-wrap">
+        <svg class="hero-phone-svg" viewBox="0 0 320 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="phoneBody" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1c1c1e"/>
+              <stop offset="50%" stop-color="#2a2a2e"/>
+              <stop offset="100%" stop-color="#141416"/>
+            </linearGradient>
+            <linearGradient id="screenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0a0a10"/>
+              <stop offset="100%" stop-color="#060608"/>
+            </linearGradient>
+            <linearGradient id="goldAccent" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#8B6F35"/>
+              <stop offset="50%" stop-color="#C9A84C"/>
+              <stop offset="100%" stop-color="#8B6F35"/>
+            </linearGradient>
+            <linearGradient id="appBar" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(201,168,76,0.15)"/>
+              <stop offset="100%" stop-color="rgba(201,168,76,0.02)"/>
+            </linearGradient>
+            <linearGradient id="chartLine" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="rgba(201,168,76,0.0)"/>
+              <stop offset="40%" stop-color="rgba(201,168,76,0.6)"/>
+              <stop offset="100%" stop-color="rgba(201,168,76,1.0)"/>
+            </linearGradient>
+            <linearGradient id="chartFill2" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(201,168,76,0.18)"/>
+              <stop offset="100%" stop-color="rgba(201,168,76,0.0)"/>
+            </linearGradient>
+            <clipPath id="screenClip">
+              <rect x="20" y="60" width="280" height="500" rx="6"/>
+            </clipPath>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="3" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="softglow">
+              <feGaussianBlur stdDeviation="8" result="blur"/>
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Phone outer shell -->
+          <rect x="2" y="2" width="316" height="616" rx="46" fill="url(#phoneBody)" stroke="rgba(201,168,76,0.35)" stroke-width="1.5"/>
+          <!-- Side sheen -->
+          <rect x="2" y="2" width="316" height="616" rx="46" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="6"/>
+
+          <!-- Side buttons -->
+          <rect x="-2" y="160" width="4" height="60" rx="2" fill="rgba(201,168,76,0.3)"/>
+          <rect x="-2" y="240" width="4" height="40" rx="2" fill="rgba(201,168,76,0.2)"/>
+          <rect x="318" y="190" width="4" height="80" rx="2" fill="rgba(201,168,76,0.2)"/>
+
+          <!-- Screen background -->
+          <rect x="20" y="60" width="280" height="500" rx="6" fill="url(#screenGrad)"/>
+
+          <!-- Screen content clipped -->
+          <g clip-path="url(#screenClip)">
+
+            <!-- Status bar -->
+            <rect x="20" y="60" width="280" height="36" fill="rgba(0,0,0,0.4)"/>
+            <text x="36" y="82" fill="rgba(247,244,239,0.6)" font-size="11" font-family="sans-serif">9:41</text>
+            <circle cx="264" cy="78" r="4" fill="rgba(201,168,76,0.7)"/>
+            <rect x="272" y="73" width="20" height="10" rx="2" fill="none" stroke="rgba(247,244,239,0.4)" stroke-width="1"/>
+            <rect x="273" y="74" width="14" height="8" rx="1.5" fill="rgba(201,168,76,0.8)"/>
+
+            <!-- App header -->
+            <rect x="20" y="96" width="280" height="56" fill="url(#appBar)"/>
+            <text x="40" y="122" fill="rgba(201,168,76,0.9)" font-size="9" font-family="sans-serif" font-weight="bold" letter-spacing="2">BUILDSTACKS</text>
+            <text x="40" y="140" fill="rgba(247,244,239,0.4)" font-size="10" font-family="sans-serif">Dashboard</text>
+            <!-- Avatar -->
+            <circle cx="278" cy="124" r="14" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+            <text x="278" y="128" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="11">BS</text>
+
+            <!-- Divider -->
+            <line x1="20" y1="152" x2="300" y2="152" stroke="rgba(201,168,76,0.1)" stroke-width="1"/>
+
+            <!-- Stats row -->
+            <rect x="28" y="160" width="78" height="68" rx="6" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+            <text x="67" y="183" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="8" font-family="sans-serif">REVENUE</text>
+            <text x="67" y="203" text-anchor="middle" fill="rgba(247,244,239,0.9)" font-size="14" font-family="sans-serif" font-weight="bold">$24k</text>
+            <text x="67" y="218" text-anchor="middle" fill="rgba(80,200,100,0.8)" font-size="8" font-family="sans-serif">↑ 18.4%</text>
+
+            <rect x="118" y="160" width="78" height="68" rx="6" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+            <text x="157" y="183" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="8" font-family="sans-serif">CLIENTS</text>
+            <text x="157" y="203" text-anchor="middle" fill="rgba(247,244,239,0.9)" font-size="14" font-family="sans-serif" font-weight="bold">40+</text>
+            <text x="157" y="218" text-anchor="middle" fill="rgba(80,200,100,0.8)" font-size="8" font-family="sans-serif">↑ Active</text>
+
+            <rect x="208" y="160" width="78" height="68" rx="6" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+            <text x="247" y="183" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="8" font-family="sans-serif">APPS</text>
+            <text x="247" y="203" text-anchor="middle" fill="rgba(247,244,239,0.9)" font-size="14" font-family="sans-serif" font-weight="bold">12</text>
+            <text x="247" y="218" text-anchor="middle" fill="rgba(80,200,100,0.8)" font-size="8" font-family="sans-serif">Live Now</text>
+
+            <!-- Chart section -->
+            <text x="40" y="252" fill="rgba(247,244,239,0.5)" font-size="9" font-family="sans-serif" letter-spacing="1">GROWTH OVERVIEW</text>
+            <!-- Chart fill area -->
+            <path d="M28 330 L60 315 L100 320 L140 295 L175 300 L210 270 L248 248 L286 228 L286 350 L28 350Z" fill="url(#chartFill2)"/>
+            <!-- Chart line -->
+            <path d="M28 330 L60 315 L100 320 L140 295 L175 300 L210 270 L248 248 L286 228" stroke="url(#chartLine)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" filter="url(#glow)"/>
+            <!-- Dot at peak -->
+            <circle cx="286" cy="228" r="4" fill="#C9A84C" filter="url(#glow)"/>
+            <circle cx="286" cy="228" r="8" fill="rgba(201,168,76,0.2)"/>
+            <!-- Grid lines -->
+            <line x1="28" y1="270" x2="286" y2="270" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="28" y1="310" x2="286" y2="310" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="28" y1="350" x2="286" y2="350" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+            <!-- Recent Projects label -->
+            <text x="40" y="378" fill="rgba(247,244,239,0.5)" font-size="9" font-family="sans-serif" letter-spacing="1">RECENT PROJECTS</text>
+
+            <!-- Project row 1 -->
+            <rect x="28" y="386" width="258" height="44" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(201,168,76,0.12)" stroke-width="0.5"/>
+            <rect x="36" y="394" width="28" height="28" rx="5" fill="rgba(201,90,30,0.2)" stroke="rgba(201,90,30,0.3)" stroke-width="0.5"/>
+            <text x="50" y="412" text-anchor="middle" fill="rgba(247,244,239,0.7)" font-size="10">💪</text>
+            <text x="76" y="406" fill="rgba(247,244,239,0.85)" font-size="10" font-family="sans-serif" font-weight="bold">IronForge</text>
+            <text x="76" y="420" fill="rgba(247,244,239,0.4)" font-size="9" font-family="sans-serif">Health &amp; Fitness</text>
+            <rect x="240" y="396" width="38" height="16" rx="8" fill="rgba(80,200,100,0.15)" stroke="rgba(80,200,100,0.3)" stroke-width="0.5"/>
+            <text x="259" y="408" text-anchor="middle" fill="rgba(80,200,100,0.9)" font-size="8" font-family="sans-serif">Live</text>
+
+            <!-- Project row 2 -->
+            <rect x="28" y="438" width="258" height="44" rx="6" fill="rgba(255,255,255,0.03)" stroke="rgba(201,168,76,0.12)" stroke-width="0.5"/>
+            <rect x="36" y="446" width="28" height="28" rx="5" fill="rgba(130,90,180,0.2)" stroke="rgba(130,90,180,0.3)" stroke-width="0.5"/>
+            <text x="50" y="464" text-anchor="middle" fill="rgba(247,244,239,0.7)" font-size="10">🛒</text>
+            <text x="76" y="458" fill="rgba(247,244,239,0.85)" font-size="10" font-family="sans-serif" font-weight="bold">Luxe Market</text>
+            <text x="76" y="472" fill="rgba(247,244,239,0.4)" font-size="9" font-family="sans-serif">E-Commerce</text>
+            <rect x="240" y="448" width="38" height="16" rx="8" fill="rgba(80,200,100,0.15)" stroke="rgba(80,200,100,0.3)" stroke-width="0.5"/>
+            <text x="259" y="460" text-anchor="middle" fill="rgba(80,200,100,0.9)" font-size="8" font-family="sans-serif">Live</text>
+
+            <!-- Bottom nav bar -->
+            <rect x="20" y="516" width="280" height="44" fill="rgba(0,0,0,0.5)" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+            <text x="67" y="542" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="16">⊞</text>
+            <text x="130" y="542" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="16">◎</text>
+            <text x="193" y="542" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="16">◈</text>
+            <text x="247" y="540" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="14">⚙</text>
+            <!-- Active indicator -->
+            <rect x="55" y="555" width="24" height="2" rx="1" fill="rgba(201,168,76,0.7)"/>
+
+          </g>
+
+          <!-- Notch / Dynamic Island -->
+          <rect x="110" y="18" width="100" height="28" rx="14" fill="#0a0a0a" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <circle cx="174" cy="32" r="4" fill="rgba(201,168,76,0.15)"/>
+          <circle cx="174" cy="32" r="2" fill="rgba(201,168,76,0.4)"/>
+
+          <!-- Screen reflection sheen -->
+          <rect x="20" y="60" width="280" height="500" rx="6" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+          <path d="M25 65 Q60 68 80 90 Q60 110 25 105Z" fill="rgba(255,255,255,0.025)"/>
+        </svg>
+
+        <!-- Floating badges around phone -->
+        <div class="hero-badge hero-badge-1">
+          <span class="hb-dot"></span>
+          <span class="hb-text">40+ Apps Shipped</span>
+        </div>
+        <div class="hero-badge hero-badge-2">
+          <span class="hb-dot"></span>
+          <span class="hb-text">98% Satisfaction</span>
+        </div>
+        <div class="hero-badge hero-badge-3">
+          <span class="hb-dot"></span>
+          <span class="hb-text">React Native</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="marquee-item"><span class="marquee-dot"></span>iOS Development</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Android Apps</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Web Platforms</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>UI/UX Design</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>MVP Builds</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Firebase & Cloud</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Payment Integration</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Scale Architecture</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>iOS Development</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Android Apps</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Web Platforms</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>UI/UX Design</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>MVP Builds</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Firebase & Cloud</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Payment Integration</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Scale Architecture</span>
+  </div>
+</div>
+
+
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="services-header reveal">
+    <div>
+      <div class="section-tag">What We Do</div>
+      <h2 class="section-title">Our <em>Expertise</em></h2>
+    </div>
+    <p class="services-intro">End-to-end product development with meticulous attention to craft, performance, and lasting impact.</p>
+  </div>
+  <div class="services-grid reveal" style="transition-delay: 0.1s;">
+    <!-- CARD 01: Mobile App Dev — fancy with mini phone UI -->
+    <div class="service-card service-card-fancy">
+      <div class="service-num">01</div>
+      <!-- Mini phone SVG -->
+      <div class="fancy-visual">
+        <svg viewBox="0 0 160 260" fill="none" xmlns="http://www.w3.org/2000/svg" class="fancy-svg fancy-svg-phone">
+          <defs>
+            <linearGradient id="sb1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#1e1e22"/>
+              <stop offset="100%" stop-color="#111114"/>
+            </linearGradient>
+            <clipPath id="sc1"><rect x="8" y="22" width="144" height="216" rx="4"/></clipPath>
+          </defs>
+          <rect x="1" y="1" width="158" height="258" rx="22" fill="url(#sb1)" stroke="rgba(201,168,76,0.4)" stroke-width="1"/>
+          <rect x="8" y="22" width="144" height="216" rx="4" fill="#07070a"/>
+          <g clip-path="url(#sc1)">
+            <!-- Top bar -->
+            <rect x="8" y="22" width="144" height="24" fill="rgba(0,0,0,0.5)"/>
+            <text x="18" y="37" fill="rgba(201,168,76,0.8)" font-size="6" font-family="sans-serif" font-weight="bold" letter-spacing="1">IRONFORGE</text>
+            <circle cx="140" cy="34" r="7" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.4)" stroke-width="0.5"/>
+            <text x="140" y="37" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="5">BS</text>
+            <!-- Hero card -->
+            <rect x="14" y="52" width="132" height="56" rx="5" fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+            <text x="28" y="70" fill="rgba(201,168,76,0.6)" font-size="5" font-family="sans-serif" letter-spacing="1">TODAY'S WORKOUT</text>
+            <text x="28" y="84" fill="rgba(247,244,239,0.9)" font-size="11" font-family="sans-serif" font-weight="bold">Push Day A</text>
+            <text x="28" y="97" fill="rgba(247,244,239,0.4)" font-size="6" font-family="sans-serif">6 exercises · 45 min</text>
+            <!-- Progress bar -->
+            <rect x="28" y="101" width="104" height="3" rx="1.5" fill="rgba(255,255,255,0.06)"/>
+            <rect x="28" y="101" width="62" height="3" rx="1.5" fill="rgba(201,168,76,0.7)"/>
+            <!-- Stat pills -->
+            <rect x="14" y="114" width="40" height="28" rx="4" fill="rgba(201,90,30,0.12)" stroke="rgba(201,90,30,0.25)" stroke-width="0.5"/>
+            <text x="34" y="124" text-anchor="middle" fill="rgba(247,244,239,0.9)" font-size="8" font-weight="bold">🔥</text>
+            <text x="34" y="135" text-anchor="middle" fill="rgba(247,244,239,0.5)" font-size="5">Streak</text>
+            <rect x="60" y="114" width="40" height="28" rx="4" fill="rgba(80,160,255,0.1)" stroke="rgba(80,160,255,0.2)" stroke-width="0.5"/>
+            <text x="80" y="124" text-anchor="middle" fill="rgba(247,244,239,0.9)" font-size="7" font-weight="bold">12</text>
+            <text x="80" y="135" text-anchor="middle" fill="rgba(247,244,239,0.5)" font-size="5">Sets Done</text>
+            <rect x="106" y="114" width="40" height="28" rx="4" fill="rgba(80,200,100,0.1)" stroke="rgba(80,200,100,0.2)" stroke-width="0.5"/>
+            <text x="126" y="124" text-anchor="middle" fill="rgba(80,200,100,0.9)" font-size="7" font-weight="bold">+4%</text>
+            <text x="126" y="135" text-anchor="middle" fill="rgba(247,244,239,0.5)" font-size="5">PR Today</text>
+            <!-- Exercise list -->
+            <text x="18" y="154" fill="rgba(247,244,239,0.4)" font-size="5" letter-spacing="1">EXERCISES</text>
+            <rect x="14" y="160" width="132" height="22" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+            <circle cx="24" cy="171" r="5" fill="rgba(201,168,76,0.15)"/>
+            <text x="24" y="174" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="6">1</text>
+            <text x="36" y="169" fill="rgba(247,244,239,0.8)" font-size="6.5" font-family="sans-serif">Bench Press</text>
+            <text x="36" y="178" fill="rgba(247,244,239,0.35)" font-size="5.5">4 × 8 · 80kg</text>
+            <rect x="120" y="165" width="20" height="12" rx="2" fill="rgba(80,200,100,0.12)"/>
+            <text x="130" y="174" text-anchor="middle" fill="rgba(80,200,100,0.8)" font-size="5.5">Done</text>
+
+            <rect x="14" y="186" width="132" height="22" rx="3" fill="rgba(255,255,255,0.03)" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+            <circle cx="24" cy="197" r="5" fill="rgba(201,168,76,0.08)"/>
+            <text x="24" y="200" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="6">2</text>
+            <text x="36" y="195" fill="rgba(247,244,239,0.8)" font-size="6.5" font-family="sans-serif">Overhead Press</text>
+            <text x="36" y="204" fill="rgba(247,244,239,0.35)" font-size="5.5">3 × 10 · 50kg</text>
+            <rect x="120" y="190" width="20" height="12" rx="2" fill="rgba(201,168,76,0.1)" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+            <text x="130" y="199" text-anchor="middle" fill="rgba(201,168,76,0.7)" font-size="5.5">Next</text>
+
+            <!-- Bottom nav -->
+            <rect x="8" y="222" width="144" height="16" fill="rgba(0,0,0,0.6)"/>
+            <text x="32" y="233" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="8">⊞</text>
+            <text x="60" y="233" text-anchor="middle" fill="rgba(247,244,239,0.25)" font-size="8">◎</text>
+            <text x="90" y="233" text-anchor="middle" fill="rgba(247,244,239,0.25)" font-size="8">▶</text>
+            <text x="120" y="233" text-anchor="middle" fill="rgba(247,244,239,0.25)" font-size="7">⚙</text>
+            <rect x="26" y="236" width="12" height="1.5" rx="0.75" fill="rgba(201,168,76,0.6)"/>
+          </g>
+          <!-- Notch -->
+          <rect x="56" y="6" width="48" height="12" rx="6" fill="#0a0a0a" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+          <!-- Side buttons -->
+          <rect x="-1" y="80" width="2" height="28" rx="1" fill="rgba(201,168,76,0.25)"/>
+          <rect x="159" y="90" width="2" height="40" rx="1" fill="rgba(201,168,76,0.2)"/>
+        </svg>
+      </div>
+      <div class="service-icon">📱</div>
+      <div class="service-name">Mobile App Development</div>
+      <p class="service-desc">Native iOS and Android experiences that feel intuitive, perform flawlessly, and delight at every touch point.</p>
+      <div class="service-tags"><span class="tag">Swift</span><span class="tag">Kotlin</span><span class="tag">Flutter</span><span class="tag">React Native</span></div>
+    </div>
+
+    <!-- CARD 02: Web Platform — fancy with browser/code window -->
+    <div class="service-card service-card-fancy">
+      <div class="service-num">02</div>
+      <div class="fancy-visual">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" class="fancy-svg fancy-svg-browser">
+          <defs>
+            <linearGradient id="browserBg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#111116"/>
+              <stop offset="100%" stop-color="#0a0a0e"/>
+            </linearGradient>
+            <linearGradient id="codeLine" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="rgba(201,168,76,0)"/>
+              <stop offset="30%" stop-color="rgba(201,168,76,0.9)"/>
+              <stop offset="100%" stop-color="rgba(201,168,76,0.3)"/>
+            </linearGradient>
+          </defs>
+          <!-- Browser frame -->
+          <rect x="0" y="0" width="200" height="140" rx="8" fill="url(#browserBg)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+          <!-- Title bar -->
+          <rect x="0" y="0" width="200" height="24" rx="8" fill="rgba(0,0,0,0.5)"/>
+          <rect x="0" y="16" width="200" height="8" fill="rgba(0,0,0,0.5)"/>
+          <!-- Traffic lights -->
+          <circle cx="14" cy="12" r="4" fill="rgba(255,95,87,0.7)"/>
+          <circle cx="26" cy="12" r="4" fill="rgba(255,189,68,0.7)"/>
+          <circle cx="38" cy="12" r="4" fill="rgba(40,200,80,0.7)"/>
+          <!-- URL bar -->
+          <rect x="52" y="6" width="100" height="12" rx="3" fill="rgba(255,255,255,0.05)" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <text x="102" y="15" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="5" font-family="monospace">buildstacks.io</text>
+          <!-- Code content area -->
+          <!-- Line numbers -->
+          <rect x="0" y="24" width="22" height="116" fill="rgba(0,0,0,0.2)"/>
+          <text x="11" y="37" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="5.5" font-family="monospace">1</text>
+          <text x="11" y="50" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="5.5" font-family="monospace">2</text>
+          <text x="11" y="63" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="5.5" font-family="monospace">3</text>
+          <text x="11" y="76" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="5.5" font-family="monospace">4</text>
+          <text x="11" y="89" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="5.5" font-family="monospace">5</text>
+          <text x="11" y="102" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="5.5" font-family="monospace">6</text>
+          <text x="11" y="115" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="5.5" font-family="monospace">7</text>
+          <text x="11" y="128" text-anchor="middle" fill="rgba(201,168,76,0.2)" font-size="5.5" font-family="monospace">8</text>
+          <!-- Active line highlight -->
+          <rect x="22" y="57" width="178" height="10" fill="rgba(201,168,76,0.06)"/>
+          <!-- Code lines -->
+          <text x="28" y="36" fill="rgba(130,100,220,0.85)" font-size="6" font-family="monospace">import</text>
+          <text x="58" y="36" fill="rgba(247,244,239,0.7)" font-size="6" font-family="monospace">React</text>
+          <text x="78" y="36" fill="rgba(247,244,239,0.4)" font-size="6" font-family="monospace">from</text>
+          <text x="96" y="36" fill="rgba(150,210,100,0.8)" font-size="6" font-family="monospace">'react'</text>
+
+          <text x="28" y="49" fill="rgba(130,100,220,0.85)" font-size="6" font-family="monospace">import</text>
+          <text x="58" y="49" fill="rgba(247,244,239,0.7)" font-size="6" font-family="monospace">firebase</text>
+          <text x="98" y="49" fill="rgba(247,244,239,0.4)" font-size="6" font-family="monospace">from</text>
+          <text x="117" y="49" fill="rgba(150,210,100,0.8)" font-size="6" font-family="monospace">'firebase'</text>
+
+          <text x="28" y="62" fill="rgba(201,168,76,0.9)" font-size="6" font-family="monospace">const</text>
+          <text x="52" y="62" fill="rgba(100,180,255,0.85)" font-size="6" font-family="monospace">App</text>
+          <text x="66" y="62" fill="rgba(247,244,239,0.5)" font-size="6" font-family="monospace">=</text>
+          <text x="73" y="62" fill="rgba(247,244,239,0.5)" font-size="6" font-family="monospace">()</text>
+          <text x="83" y="62" fill="rgba(201,168,76,0.7)" font-size="6" font-family="monospace">=&gt;</text>
+          <text x="96" y="62" fill="rgba(247,244,239,0.4)" font-size="6" font-family="monospace">{</text>
+
+          <text x="36" y="75" fill="rgba(130,100,220,0.85)" font-size="6" font-family="monospace">return</text>
+          <text x="64" y="75" fill="rgba(247,244,239,0.4)" font-size="6" font-family="monospace">(</text>
+
+          <text x="44" y="88" fill="rgba(255,120,80,0.8)" font-size="6" font-family="monospace">&lt;Dashboard</text>
+          <text x="100" y="88" fill="rgba(100,180,255,0.7)" font-size="6" font-family="monospace">theme</text>
+          <text x="123" y="88" fill="rgba(247,244,239,0.4)" font-size="6" font-family="monospace">=</text>
+          <text x="129" y="88" fill="rgba(150,210,100,0.8)" font-size="6" font-family="monospace">"gold"</text>
+
+          <text x="44" y="101" fill="rgba(100,180,255,0.7)" font-size="6" font-family="monospace">data</text>
+          <text x="63" y="101" fill="rgba(247,244,239,0.4)" font-size="6" font-family="monospace">= {</text>
+          <text x="78" y="101" fill="rgba(201,168,76,0.7)" font-size="6" font-family="monospace">revenue</text>
+          <text x="108" y="101" fill="rgba(247,244,239,0.4)" font-size="6" font-family="monospace">:</text>
+          <text x="113" y="101" fill="rgba(150,210,100,0.8)" font-size="6" font-family="monospace">24000</text>
+          <text x="141" y="101" fill="rgba(247,244,239,0.4)" font-size="6" font-family="monospace">}</text>
+
+          <text x="44" y="114" fill="rgba(255,120,80,0.8)" font-size="6" font-family="monospace">/&gt;</text>
+
+          <text x="36" y="127" fill="rgba(247,244,239,0.4)" font-size="6" font-family="monospace">)</text>
+          <!-- Cursor blink -->
+          <rect x="46" y="120" width="1" height="8" fill="rgba(201,168,76,0.9)">
+            <animate attributeName="opacity" values="1;0;1" dur="1.2s" repeatCount="indefinite"/>
+          </rect>
+          <!-- Scrollbar -->
+          <rect x="196" y="24" width="4" height="116" rx="2" fill="rgba(255,255,255,0.03)"/>
+          <rect x="196" y="40" width="4" height="30" rx="2" fill="rgba(201,168,76,0.2)"/>
+        </svg>
+
+        <!-- Second mini: component preview -->
+        <svg viewBox="0 0 200 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="fancy-svg fancy-svg-preview">
+          <rect x="0" y="0" width="200" height="80" rx="6" fill="rgba(8,8,8,0.9)" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+          <!-- Mock UI card inside -->
+          <text x="12" y="14" fill="rgba(201,168,76,0.5)" font-size="5.5" font-family="sans-serif" letter-spacing="1">PREVIEW</text>
+          <rect x="10" y="20" width="180" height="50" rx="5" fill="rgba(255,255,255,0.02)" stroke="rgba(201,168,76,0.1)" stroke-width="0.5"/>
+          <!-- Mini nav -->
+          <rect x="10" y="20" width="180" height="14" rx="5" fill="rgba(0,0,0,0.4)"/>
+          <rect x="10" y="26" width="180" height="8" fill="rgba(0,0,0,0.4)"/>
+          <circle cx="18" cy="27" r="3" fill="rgba(201,168,76,0.4)"/>
+          <rect x="26" y="24" width="28" height="6" rx="1.5" fill="rgba(255,255,255,0.05)"/>
+          <rect x="152" y="24" width="30" height="6" rx="3" fill="rgba(201,168,76,0.3)"/>
+          <!-- Hero text mock -->
+          <rect x="16" y="40" width="60" height="5" rx="2" fill="rgba(247,244,239,0.5)"/>
+          <rect x="16" y="48" width="42" height="4" rx="2" fill="rgba(247,244,239,0.2)"/>
+          <rect x="16" y="55" width="28" height="8" rx="2" fill="rgba(201,168,76,0.5)"/>
+          <!-- Mock image area -->
+          <rect x="120" y="36" width="60" height="30" rx="3" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.15)" stroke-width="0.5"/>
+          <text x="150" y="56" text-anchor="middle" fill="rgba(201,168,76,0.4)" font-size="14">⬡</text>
+        </svg>
+      </div>
+      <div class="service-icon">🌐</div>
+      <div class="service-name">Web Platform Design</div>
+      <p class="service-desc">Scalable, beautiful web applications engineered with modern stacks that grow alongside your ambitions.</p>
+      <div class="service-tags"><span class="tag">React</span><span class="tag">Next.js</span><span class="tag">Node.js</span><span class="tag">Firebase</span></div>
+    </div>
+    <!-- CARD 03: UI/UX & Brand Design — Figma-style design canvas -->
+    <div class="service-card service-card-fancy">
+      <div class="service-num">03</div>
+      <div class="fancy-visual">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" class="fancy-svg fancy-svg-browser">
+          <defs>
+            <linearGradient id="figmaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#111116"/>
+              <stop offset="100%" stop-color="#0d0d11"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="200" height="140" rx="8" fill="url(#figmaBg)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <!-- Toolbar top -->
+          <rect x="0" y="0" width="200" height="20" rx="8" fill="rgba(0,0,0,0.5)"/>
+          <rect x="0" y="12" width="200" height="8" fill="rgba(0,0,0,0.5)"/>
+          <circle cx="12" cy="10" r="3.5" fill="rgba(255,95,87,0.7)"/>
+          <circle cx="22" cy="10" r="3.5" fill="rgba(255,189,68,0.7)"/>
+          <circle cx="32" cy="10" r="3.5" fill="rgba(40,200,80,0.7)"/>
+          <!-- Figma-style tool icons -->
+          <rect x="85" y="4" width="30" height="12" rx="3" fill="rgba(201,168,76,0.15)" stroke="rgba(201,168,76,0.3)" stroke-width="0.5"/>
+          <text x="100" y="13" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="5.5" font-family="sans-serif">BuildStacks</text>
+          <!-- Left panel -->
+          <rect x="0" y="20" width="32" height="120" fill="rgba(0,0,0,0.3)"/>
+          <text x="16" y="36" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="8">▶</text>
+          <text x="16" y="52" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="8">◻</text>
+          <text x="16" y="68" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="8">T</text>
+          <text x="16" y="84" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="7">✏</text>
+          <text x="16" y="100" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="7">⬡</text>
+          <!-- Right panel -->
+          <rect x="158" y="20" width="42" height="120" fill="rgba(0,0,0,0.3)"/>
+          <text x="179" y="33" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="5" letter-spacing="0.5">FILL</text>
+          <rect x="163" y="37" width="30" height="10" rx="2" fill="rgba(201,168,76,0.8)"/>
+          <text x="179" y="59" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="5" letter-spacing="0.5">STROKE</text>
+          <rect x="163" y="63" width="30" height="10" rx="2" fill="none" stroke="rgba(201,168,76,0.5)" stroke-width="1"/>
+          <text x="179" y="84" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="5">W  200</text>
+          <text x="179" y="96" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="5">H  140</text>
+          <text x="179" y="108" text-anchor="middle" fill="rgba(247,244,239,0.3)" font-size="5">R  8</text>
+          <!-- Canvas area with design mockup -->
+          <!-- Grid dots -->
+          <pattern id="dots" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+            <circle cx="5" cy="5" r="0.5" fill="rgba(255,255,255,0.07)"/>
+          </pattern>
+          <rect x="32" y="20" width="126" height="120" fill="url(#dots)"/>
+          <!-- Selection box around card -->
+          <rect x="48" y="32" width="94" height="96" rx="2" fill="none" stroke="rgba(80,160,255,0.7)" stroke-width="1" stroke-dasharray="3 2"/>
+          <!-- Corner handles -->
+          <rect x="45" y="29" width="6" height="6" rx="1" fill="rgba(80,160,255,0.9)"/>
+          <rect x="136" y="29" width="6" height="6" rx="1" fill="rgba(80,160,255,0.9)"/>
+          <rect x="45" y="123" width="6" height="6" rx="1" fill="rgba(80,160,255,0.9)"/>
+          <rect x="136" y="123" width="6" height="6" rx="1" fill="rgba(80,160,255,0.9)"/>
+          <!-- Card being designed -->
+          <rect x="50" y="34" width="90" height="92" rx="5" fill="rgba(8,8,12,0.9)" stroke="rgba(201,168,76,0.12)" stroke-width="0.5"/>
+          <!-- Gold top accent -->
+          <rect x="50" y="34" width="90" height="18" rx="5" fill="rgba(201,168,76,0.15)"/>
+          <rect x="50" y="44" width="90" height="8" fill="rgba(201,168,76,0.15)"/>
+          <text x="95" y="46" text-anchor="middle" fill="rgba(201,168,76,0.8)" font-size="5.5" font-family="sans-serif" font-weight="bold">BuildStacks</text>
+          <!-- Typography layers -->
+          <rect x="58" y="58" width="50" height="6" rx="1.5" fill="rgba(247,244,239,0.7)"/>
+          <rect x="58" y="68" width="34" height="4" rx="1" fill="rgba(247,244,239,0.25)"/>
+          <!-- Color swatches -->
+          <circle cx="60" cy="84" r="6" fill="#C9A84C"/>
+          <circle cx="74" cy="84" r="6" fill="#080808"/>
+          <circle cx="88" cy="84" r="6" fill="#F7F4EF"/>
+          <circle cx="102" cy="84" r="6" fill="#1A1A1A" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/>
+          <!-- CTA button mockup -->
+          <rect x="58" y="96" width="40" height="12" rx="3" fill="rgba(201,168,76,0.8)"/>
+          <rect x="106" y="96" width="26" height="12" rx="3" fill="none" stroke="rgba(201,168,76,0.4)" stroke-width="0.5"/>
+          <!-- Dimension label -->
+          <text x="95" y="115" text-anchor="middle" fill="rgba(80,160,255,0.6)" font-size="5" font-family="monospace">w: 90 · h: 92 · r: 5</text>
+        </svg>
+      </div>
+      <div class="service-icon">✦</div>
+      <div class="service-name">UI/UX & Brand Design</div>
+      <p class="service-desc">Design systems and visual identities that communicate authority, elevate perception, and convert users into advocates.</p>
+      <div class="service-tags"><span class="tag">Figma</span><span class="tag">Design Systems</span><span class="tag">Prototyping</span></div>
+    </div>
+
+    <!-- CARD 04: MVP & Rapid Launch — rocket launch timeline -->
+    <div class="service-card service-card-fancy">
+      <div class="service-num">04</div>
+      <div class="fancy-visual">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" class="fancy-svg fancy-svg-browser">
+          <defs>
+            <linearGradient id="mvpBg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#0a080f"/>
+              <stop offset="100%" stop-color="#050508"/>
+            </linearGradient>
+            <linearGradient id="rocketTrail" x1="0%" y1="100%" x2="0%" y2="0%">
+              <stop offset="0%" stop-color="rgba(201,168,76,0)"/>
+              <stop offset="100%" stop-color="rgba(201,168,76,0.6)"/>
+            </linearGradient>
+            <radialGradient id="launchGlow" cx="50%" cy="90%" r="50%">
+              <stop offset="0%" stop-color="rgba(201,168,76,0.2)"/>
+              <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
+            </radialGradient>
+          </defs>
+          <rect x="0" y="0" width="200" height="140" rx="8" fill="url(#mvpBg)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+          <!-- Stars background -->
+          <circle cx="20" cy="15" r="0.8" fill="rgba(247,244,239,0.5)"/>
+          <circle cx="55" cy="8" r="1" fill="rgba(247,244,239,0.4)"/>
+          <circle cx="90" cy="20" r="0.6" fill="rgba(247,244,239,0.6)"/>
+          <circle cx="130" cy="10" r="0.9" fill="rgba(247,244,239,0.3)"/>
+          <circle cx="165" cy="18" r="0.7" fill="rgba(247,244,239,0.5)"/>
+          <circle cx="185" cy="6" r="1" fill="rgba(247,244,239,0.4)"/>
+          <circle cx="40" cy="35" r="0.6" fill="rgba(247,244,239,0.3)"/>
+          <circle cx="110" cy="40" r="0.8" fill="rgba(247,244,239,0.4)"/>
+          <circle cx="150" cy="30" r="0.6" fill="rgba(247,244,239,0.3)"/>
+          <!-- Orbit arc -->
+          <path d="M10 130 Q100 -20 190 130" stroke="rgba(201,168,76,0.08)" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+          <!-- Launch glow -->
+          <ellipse cx="100" cy="125" rx="40" ry="15" fill="url(#launchGlow)"/>
+          <!-- Rocket trail -->
+          <line x1="100" y1="120" x2="100" y2="60" stroke="url(#rocketTrail)" stroke-width="2"/>
+          <line x1="97" y1="115" x2="94" y2="75" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+          <line x1="103" y1="115" x2="106" y2="75" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+          <!-- Flame particles -->
+          <circle cx="100" cy="122" r="5" fill="rgba(255,140,40,0.3)"/>
+          <circle cx="98" cy="126" r="3" fill="rgba(255,80,20,0.4)"/>
+          <circle cx="102" cy="126" r="3" fill="rgba(255,80,20,0.4)"/>
+          <circle cx="100" cy="130" r="4" fill="rgba(255,120,30,0.2)"/>
+          <!-- Rocket body -->
+          <path d="M94 88 Q100 55 106 88Z" fill="rgba(247,244,239,0.9)"/>
+          <rect x="94" y="86" width="12" height="16" rx="2" fill="rgba(220,220,230,0.85)"/>
+          <!-- Window -->
+          <circle cx="100" cy="92" r="3" fill="rgba(80,160,255,0.6)" stroke="rgba(247,244,239,0.4)" stroke-width="0.5"/>
+          <!-- Fins -->
+          <path d="M94 98 L88 106 L94 104Z" fill="rgba(201,168,76,0.7)"/>
+          <path d="M106 98 L112 106 L106 104Z" fill="rgba(201,168,76,0.7)"/>
+
+          <!-- Timeline milestones on the side -->
+          <line x1="30" y1="30" x2="30" y2="130" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+          <!-- Week markers -->
+          <circle cx="30" cy="40" r="4" fill="rgba(80,200,100,0.8)"/>
+          <text x="38" y="43" fill="rgba(247,244,239,0.7)" font-size="6" font-family="sans-serif" font-weight="bold">Week 1</text>
+          <text x="38" y="52" fill="rgba(247,244,239,0.3)" font-size="5" font-family="sans-serif">Discovery &amp; Design</text>
+
+          <circle cx="30" cy="68" r="4" fill="rgba(80,200,100,0.8)"/>
+          <text x="38" y="71" fill="rgba(247,244,239,0.7)" font-size="6" font-family="sans-serif" font-weight="bold">Week 3</text>
+          <text x="38" y="80" fill="rgba(247,244,239,0.3)" font-size="5" font-family="sans-serif">Core Build Sprint</text>
+
+          <circle cx="30" cy="96" r="4" fill="rgba(201,168,76,0.9)"/>
+          <text x="38" y="99" fill="rgba(247,244,239,0.7)" font-size="6" font-family="sans-serif" font-weight="bold">Week 6</text>
+          <text x="38" y="108" fill="rgba(247,244,239,0.3)" font-size="5" font-family="sans-serif">QA &amp; Polish</text>
+
+          <circle cx="30" cy="124" r="5" fill="rgba(201,168,76,1)" stroke="rgba(201,168,76,0.4)" stroke-width="2"/>
+          <text x="38" y="127" fill="rgba(201,168,76,0.95)" font-size="6" font-family="sans-serif" font-weight="bold">Week 8 · LIVE 🚀</text>
+
+          <!-- Connecting line dots -->
+          <circle cx="30" cy="54" r="1.5" fill="rgba(201,168,76,0.3)"/>
+          <circle cx="30" cy="60" r="1.5" fill="rgba(201,168,76,0.3)"/>
+          <circle cx="30" cy="82" r="1.5" fill="rgba(201,168,76,0.3)"/>
+          <circle cx="30" cy="88" r="1.5" fill="rgba(201,168,76,0.3)"/>
+          <circle cx="30" cy="110" r="1.5" fill="rgba(201,168,76,0.3)"/>
+          <circle cx="30" cy="116" r="1.5" fill="rgba(201,168,76,0.3)"/>
+        </svg>
+      </div>
+      <div class="service-icon">⚡</div>
+      <div class="service-name">MVP & Rapid Launch</div>
+      <p class="service-desc">Validate your idea fast. We strip complexity, retain quality, and get you to market before your window closes.</p>
+      <div class="service-tags"><span class="tag">4–8 Weeks</span><span class="tag">Lean Build</span><span class="tag">Launch Ready</span></div>
+    </div>
+
+    <!-- CARD 05: API & Integration — data flow diagram -->
+    <div class="service-card service-card-fancy">
+      <div class="service-num">05</div>
+      <div class="fancy-visual">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" class="fancy-svg fancy-svg-browser">
+          <defs>
+            <linearGradient id="apiBg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#080d0a"/>
+              <stop offset="100%" stop-color="#050808"/>
+            </linearGradient>
+            <linearGradient id="flowLine" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="rgba(201,168,76,0.8)"/>
+              <stop offset="100%" stop-color="rgba(80,200,160,0.8)"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="200" height="140" rx="8" fill="url(#apiBg)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+
+          <!-- Central API node -->
+          <circle cx="100" cy="70" r="20" fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.5)" stroke-width="1.5"/>
+          <circle cx="100" cy="70" r="14" fill="rgba(201,168,76,0.12)" stroke="rgba(201,168,76,0.3)" stroke-width="0.5"/>
+          <text x="100" y="67" text-anchor="middle" fill="rgba(201,168,76,0.9)" font-size="5.5" font-family="monospace" font-weight="bold">REST</text>
+          <text x="100" y="76" text-anchor="middle" fill="rgba(201,168,76,0.6)" font-size="5" font-family="monospace">API</text>
+          <!-- Pulse ring -->
+          <circle cx="100" cy="70" r="26" fill="none" stroke="rgba(201,168,76,0.15)" stroke-width="1">
+            <animate attributeName="r" values="22;30;22" dur="2.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="0.4;0;0.4" dur="2.5s" repeatCount="indefinite"/>
+          </circle>
+
+          <!-- Left nodes — services -->
+          <rect x="6" y="12" width="52" height="22" rx="4" fill="rgba(80,160,255,0.1)" stroke="rgba(80,160,255,0.35)" stroke-width="0.75"/>
+          <text x="32" y="22" text-anchor="middle" fill="rgba(80,160,255,0.9)" font-size="5.5" font-family="monospace">Firebase</text>
+          <text x="32" y="30" text-anchor="middle" fill="rgba(80,160,255,0.5)" font-size="4.5">Database</text>
+
+          <rect x="6" y="44" width="52" height="22" rx="4" fill="rgba(100,200,120,0.1)" stroke="rgba(100,200,120,0.35)" stroke-width="0.75"/>
+          <text x="32" y="54" text-anchor="middle" fill="rgba(100,200,120,0.9)" font-size="5.5" font-family="monospace">Stripe</text>
+          <text x="32" y="62" text-anchor="middle" fill="rgba(100,200,120,0.5)" font-size="4.5">Payments</text>
+
+          <rect x="6" y="76" width="52" height="22" rx="4" fill="rgba(255,140,60,0.1)" stroke="rgba(255,140,60,0.35)" stroke-width="0.75"/>
+          <text x="32" y="86" text-anchor="middle" fill="rgba(255,140,60,0.9)" font-size="5.5" font-family="monospace">Auth0</text>
+          <text x="32" y="94" text-anchor="middle" fill="rgba(255,140,60,0.5)" font-size="4.5">Security</text>
+
+          <rect x="6" y="108" width="52" height="22" rx="4" fill="rgba(200,80,200,0.1)" stroke="rgba(200,80,200,0.35)" stroke-width="0.75"/>
+          <text x="32" y="118" text-anchor="middle" fill="rgba(200,80,200,0.9)" font-size="5.5" font-family="monospace">Twilio</text>
+          <text x="32" y="126" text-anchor="middle" fill="rgba(200,80,200,0.5)" font-size="4.5">Messaging</text>
+
+          <!-- Right nodes — outputs -->
+          <rect x="142" y="12" width="52" height="22" rx="4" fill="rgba(201,168,76,0.1)" stroke="rgba(201,168,76,0.35)" stroke-width="0.75"/>
+          <text x="168" y="22" text-anchor="middle" fill="rgba(201,168,76,0.9)" font-size="5.5" font-family="monospace">iOS App</text>
+          <text x="168" y="30" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="4.5">Swift</text>
+
+          <rect x="142" y="44" width="52" height="22" rx="4" fill="rgba(201,168,76,0.1)" stroke="rgba(201,168,76,0.35)" stroke-width="0.75"/>
+          <text x="168" y="54" text-anchor="middle" fill="rgba(201,168,76,0.9)" font-size="5.5" font-family="monospace">Android</text>
+          <text x="168" y="62" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="4.5">Kotlin</text>
+
+          <rect x="142" y="76" width="52" height="22" rx="4" fill="rgba(201,168,76,0.1)" stroke="rgba(201,168,76,0.35)" stroke-width="0.75"/>
+          <text x="168" y="86" text-anchor="middle" fill="rgba(201,168,76,0.9)" font-size="5.5" font-family="monospace">Web App</text>
+          <text x="168" y="94" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="4.5">React</text>
+
+          <rect x="142" y="108" width="52" height="22" rx="4" fill="rgba(201,168,76,0.1)" stroke="rgba(201,168,76,0.35)" stroke-width="0.75"/>
+          <text x="168" y="118" text-anchor="middle" fill="rgba(201,168,76,0.9)" font-size="5.5" font-family="monospace">Dashboard</text>
+          <text x="168" y="126" text-anchor="middle" fill="rgba(201,168,76,0.5)" font-size="4.5">Analytics</text>
+
+          <!-- Connecting lines left -->
+          <line x1="58" y1="23" x2="80" y2="62" stroke="rgba(80,160,255,0.35)" stroke-width="0.75" stroke-dasharray="3 2"/>
+          <line x1="58" y1="55" x2="80" y2="66" stroke="rgba(100,200,120,0.35)" stroke-width="0.75" stroke-dasharray="3 2"/>
+          <line x1="58" y1="87" x2="80" y2="72" stroke="rgba(255,140,60,0.35)" stroke-width="0.75" stroke-dasharray="3 2"/>
+          <line x1="58" y1="119" x2="80" y2="76" stroke="rgba(200,80,200,0.35)" stroke-width="0.75" stroke-dasharray="3 2"/>
+
+          <!-- Connecting lines right -->
+          <line x1="120" y1="62" x2="142" y2="23" stroke="rgba(201,168,76,0.35)" stroke-width="0.75" stroke-dasharray="3 2"/>
+          <line x1="120" y1="66" x2="142" y2="55" stroke="rgba(201,168,76,0.3)" stroke-width="0.75" stroke-dasharray="3 2"/>
+          <line x1="120" y1="72" x2="142" y2="87" stroke="rgba(201,168,76,0.25)" stroke-width="0.75" stroke-dasharray="3 2"/>
+          <line x1="120" y1="76" x2="142" y2="119" stroke="rgba(201,168,76,0.2)" stroke-width="0.75" stroke-dasharray="3 2"/>
+
+          <!-- Animated data packet left to center -->
+          <circle cx="0" cy="0" r="2" fill="rgba(80,160,255,0.9)">
+            <animateMotion dur="2s" repeatCount="indefinite" path="M58,23 L80,62"/>
+          </circle>
+          <circle cx="0" cy="0" r="2" fill="rgba(100,200,120,0.9)">
+            <animateMotion dur="2.4s" repeatCount="indefinite" begin="0.6s" path="M58,55 L80,66"/>
+          </circle>
+          <!-- Animated data packet center to right -->
+          <circle cx="0" cy="0" r="2" fill="rgba(201,168,76,0.9)">
+            <animateMotion dur="2s" repeatCount="indefinite" begin="0.3s" path="M120,62 L142,23"/>
+          </circle>
+          <circle cx="0" cy="0" r="2" fill="rgba(201,168,76,0.7)">
+            <animateMotion dur="2.2s" repeatCount="indefinite" begin="1s" path="M120,72 L142,87"/>
+          </circle>
+        </svg>
+      </div>
+      <div class="service-icon">🔗</div>
+      <div class="service-name">API & Integration</div>
+      <p class="service-desc">Seamless third-party integrations, payment gateways, and custom backend APIs that form the spine of your product.</p>
+      <div class="service-tags"><span class="tag">REST</span><span class="tag">GraphQL</span><span class="tag">Payments</span><span class="tag">Auth</span></div>
+    </div>
+
+    <!-- CARD 06: Growth & Maintenance — analytics dashboard -->
+    <div class="service-card service-card-fancy">
+      <div class="service-num">06</div>
+      <div class="fancy-visual">
+        <svg viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg" class="fancy-svg fancy-svg-browser">
+          <defs>
+            <linearGradient id="growBg" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#080c08"/>
+              <stop offset="100%" stop-color="#050808"/>
+            </linearGradient>
+            <linearGradient id="barGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(80,210,100,0.9)"/>
+              <stop offset="100%" stop-color="rgba(40,160,70,0.6)"/>
+            </linearGradient>
+            <linearGradient id="barGold" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(201,168,76,0.95)"/>
+              <stop offset="100%" stop-color="rgba(140,110,40,0.7)"/>
+            </linearGradient>
+            <linearGradient id="areaFill" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="rgba(201,168,76,0.25)"/>
+              <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="200" height="140" rx="8" fill="url(#growBg)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+
+          <!-- Top KPI strip -->
+          <rect x="6" y="6" width="56" height="30" rx="4" fill="rgba(80,210,100,0.07)" stroke="rgba(80,210,100,0.2)" stroke-width="0.5"/>
+          <text x="34" y="18" text-anchor="middle" fill="rgba(247,244,239,0.5)" font-size="4.5" font-family="sans-serif">USERS</text>
+          <text x="34" y="28" text-anchor="middle" fill="rgba(80,210,100,0.95)" font-size="9" font-family="sans-serif" font-weight="bold">12.4k</text>
+
+          <rect x="72" y="6" width="56" height="30" rx="4" fill="rgba(201,168,76,0.07)" stroke="rgba(201,168,76,0.2)" stroke-width="0.5"/>
+          <text x="100" y="18" text-anchor="middle" fill="rgba(247,244,239,0.5)" font-size="4.5" font-family="sans-serif">REVENUE</text>
+          <text x="100" y="28" text-anchor="middle" fill="rgba(201,168,76,0.95)" font-size="9" font-family="sans-serif" font-weight="bold">$8.2k</text>
+
+          <rect x="138" y="6" width="56" height="30" rx="4" fill="rgba(80,160,255,0.07)" stroke="rgba(80,160,255,0.2)" stroke-width="0.5"/>
+          <text x="166" y="18" text-anchor="middle" fill="rgba(247,244,239,0.5)" font-size="4.5" font-family="sans-serif">UPTIME</text>
+          <text x="166" y="28" text-anchor="middle" fill="rgba(80,160,255,0.95)" font-size="9" font-family="sans-serif" font-weight="bold">99.9%</text>
+
+          <!-- Area chart -->
+          <path d="M10 100 L32 92 L54 96 L76 80 L98 83 L120 68 L142 55 L164 42 L186 30 L186 110 L10 110Z" fill="url(#areaFill)"/>
+          <path d="M10 100 L32 92 L54 96 L76 80 L98 83 L120 68 L142 55 L164 42 L186 30" stroke="rgba(201,168,76,0.8)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Peak dot -->
+          <circle cx="186" cy="30" r="3" fill="rgba(201,168,76,1)"/>
+          <circle cx="186" cy="30" r="6" fill="rgba(201,168,76,0.2)"/>
+
+          <!-- Grid lines -->
+          <line x1="10" y1="75" x2="190" y2="75" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="10" y1="90" x2="190" y2="90" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="10" y1="60" x2="190" y2="60" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+          <line x1="10" y1="45" x2="190" y2="45" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+          <line x1="10" y1="110" x2="190" y2="110" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+          <!-- Bar chart section -->
+          <text x="10" y="120" fill="rgba(247,244,239,0.3)" font-size="4.5" font-family="sans-serif">Jan</text>
+          <text x="38" y="120" fill="rgba(247,244,239,0.3)" font-size="4.5" font-family="sans-serif">Feb</text>
+          <text x="66" y="120" fill="rgba(247,244,239,0.3)" font-size="4.5" font-family="sans-serif">Mar</text>
+          <text x="94" y="120" fill="rgba(247,244,239,0.3)" font-size="4.5" font-family="sans-serif">Apr</text>
+          <text x="122" y="120" fill="rgba(247,244,239,0.3)" font-size="4.5" font-family="sans-serif">May</text>
+          <text x="150" y="120" fill="rgba(247,244,239,0.3)" font-size="4.5" font-family="sans-serif">Jun</text>
+          <text x="178" y="120" fill="rgba(201,168,76,0.7)" font-size="4.5" font-family="sans-serif">Jul</text>
+
+          <!-- Inline sparkbars -->
+          <rect x="10" y="125" width="8" height="10" rx="1.5" fill="url(#barGreen)" opacity="0.6"/>
+          <rect x="38" y="122" width="8" height="13" rx="1.5" fill="url(#barGreen)" opacity="0.65"/>
+          <rect x="66" y="120" width="8" height="15" rx="1.5" fill="url(#barGreen)" opacity="0.7"/>
+          <rect x="94" y="117" width="8" height="18" rx="1.5" fill="url(#barGold)" opacity="0.75"/>
+          <rect x="122" y="114" width="8" height="21" rx="1.5" fill="url(#barGold)" opacity="0.85"/>
+          <rect x="150" y="111" width="8" height="24" rx="1.5" fill="url(#barGold)" opacity="0.9"/>
+          <rect x="178" y="107" width="8" height="28" rx="1.5" fill="url(#barGold)"/>
+          <!-- Active bar glow -->
+          <rect x="178" y="107" width="8" height="28" rx="1.5" fill="rgba(201,168,76,0.2)" filter="blur(2px)"/>
+        </svg>
+      </div>
+      <div class="service-icon">🛡</div>
+      <div class="service-name">Growth & Maintenance</div>
+      <p class="service-desc">Post-launch, we don't disappear. Ongoing support, performance tuning, and feature evolution as your user base scales.</p>
+      <div class="service-tags"><span class="tag">Analytics</span><span class="tag">Monitoring</span><span class="tag">Iterations</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process" id="process">
+  <div class="reveal">
+    <div class="section-tag">How We Work</div>
+    <h2 class="section-title">A Process Built for<br/><em>Precision</em></h2>
+  </div>
+  <div class="process-steps reveal" style="transition-delay: 0.15s;">
+    <div class="process-step">
+      <div class="step-num">Step 01</div>
+      <div class="step-name">Discovery & Strategy</div>
+      <p class="step-desc">We deep-dive into your vision, users, and market. No assumptions — only clarity.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">Step 02</div>
+      <div class="step-name">Design & Prototype</div>
+      <p class="step-desc">High-fidelity wireframes and interactive prototypes before a line of code is written.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">Step 03</div>
+      <div class="step-name">Build & Iterate</div>
+      <p class="step-desc">Agile sprints with real-time updates. You see progress weekly, not at the end.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">Step 04</div>
+      <div class="step-name">Launch & Scale</div>
+      <p class="step-desc">Thorough QA, store submission, launch support, and a roadmap for what comes next.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section id="work">
+  <div class="reveal">
+    <div class="section-tag">Featured Work</div>
+    <h2 class="section-title">Products We're<br/><em>Proud</em> Of</h2>
+  </div>
+  <div class="portfolio-grid reveal" style="transition-delay: 0.1s;">
+
+    <!-- IronForge — gym photo -->
+    <div class="project-card">
+      <div class="project-photo photo-ironforge"></div>
+      <!-- Barbell SVG -->
+      <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none" viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice">
+        <!-- barbell bar -->
+        <rect x="60" y="370" width="480" height="10" rx="5" fill="url(#barGrad)" opacity="0.55"/>
+        <!-- left weight plates -->
+        <rect x="60" y="320" width="28" height="110" rx="6" fill="url(#plateGrad)" opacity="0.6"/>
+        <rect x="94" y="330" width="20" height="90" rx="5" fill="url(#plateGrad)" opacity="0.5"/>
+        <!-- right weight plates -->
+        <rect x="512" y="320" width="28" height="110" rx="6" fill="url(#plateGrad)" opacity="0.6"/>
+        <rect x="486" y="330" width="20" height="90" rx="5" fill="url(#plateGrad)" opacity="0.5"/>
+        <!-- glow under bar -->
+        <ellipse cx="300" cy="385" rx="200" ry="12" fill="rgba(201,168,76,0.06)"/>
+        <defs>
+          <linearGradient id="barGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="rgba(100,80,40,0)"/>
+            <stop offset="15%" stop-color="rgba(200,170,90,0.7)"/>
+            <stop offset="50%" stop-color="rgba(220,195,120,0.9)"/>
+            <stop offset="85%" stop-color="rgba(200,170,90,0.7)"/>
+            <stop offset="100%" stop-color="rgba(100,80,40,0)"/>
+          </linearGradient>
+          <linearGradient id="plateGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="rgba(80,65,30,0.8)"/>
+            <stop offset="50%" stop-color="rgba(180,155,80,0.85)"/>
+            <stop offset="100%" stop-color="rgba(80,65,30,0.8)"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="project-year">2024</div>
+      <div class="project-inner">
+        <div class="project-cat">Health &amp; Fitness</div>
+        <div class="project-name">IronForge<br/>Coaching App</div>
+        <p class="project-desc">Bespoke gym coaching platform with per-member video assignment, real-time progress tracking, and seamless UPI payment integration.</p>
+        <div class="project-badge">View Case Study</div>
+      </div>
+    </div>
+
+    <!-- Luxe Marketplace — fashion photo -->
+    <div class="project-card">
+      <div class="project-photo photo-luxe"></div>
+      <!-- Elegant fashion frame SVG -->
+      <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none" viewBox="0 0 400 420" preserveAspectRatio="xMidYMid slice">
+        <!-- Dress silhouette -->
+        <path d="M160 60 Q200 50 240 60 L260 130 Q230 120 200 118 Q170 120 140 130 Z" fill="rgba(201,168,76,0.08)" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+        <path d="M140 130 Q130 200 110 310 Q155 290 200 288 Q245 290 290 310 Q270 200 260 130 Q230 120 200 118 Q170 120 140 130Z" fill="rgba(201,168,76,0.05)" stroke="rgba(201,168,76,0.2)" stroke-width="1"/>
+        <!-- Shimmer lines on dress -->
+        <line x1="170" y1="150" x2="165" y2="280" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+        <line x1="200" y1="118" x2="200" y2="285" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+        <line x1="230" y1="150" x2="235" y2="280" stroke="rgba(201,168,76,0.12)" stroke-width="1"/>
+        <!-- Glow beneath -->
+        <ellipse cx="200" cy="310" rx="80" ry="10" fill="rgba(201,168,76,0.08)"/>
+      </svg>
+      <div class="project-year">2024</div>
+      <div class="project-inner">
+        <div class="project-cat">E-Commerce</div>
+        <div class="project-name">Luxe Marketplace</div>
+        <p class="project-desc">Premium multi-vendor marketplace with AI-driven recommendations and luxury brand partnerships.</p>
+        <div class="project-badge">View Case Study</div>
+      </div>
+    </div>
+
+    <!-- WealthTrack — finance photo -->
+    <div class="project-card">
+      <div class="project-photo photo-wealth"></div>
+      <!-- Stock chart SVG -->
+      <svg style="position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none" viewBox="0 0 400 420" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="chartFill" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="rgba(30,200,80,0.18)"/>
+            <stop offset="100%" stop-color="rgba(30,200,80,0)"/>
+          </linearGradient>
+          <linearGradient id="goldLine" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="rgba(201,168,76,0)"/>
+            <stop offset="20%" stop-color="rgba(201,168,76,0.8)"/>
+            <stop offset="80%" stop-color="rgba(201,168,76,0.8)"/>
+            <stop offset="100%" stop-color="rgba(201,168,76,0)"/>
+          </linearGradient>
+        </defs>
+        <!-- Chart area fill -->
+        <path d="M30 280 L80 260 L130 270 L170 230 L210 240 L250 190 L290 160 L330 140 L370 100 L370 320 L30 320Z" fill="url(#chartFill)"/>
+        <!-- Main chart line — green uptrend -->
+        <path d="M30 280 L80 260 L130 270 L170 230 L210 240 L250 190 L290 160 L330 140 L370 100" fill="none" stroke="rgba(30,200,80,0.7)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- Gold moving average line -->
+        <path d="M30 290 L80 275 L130 268 L170 248 L210 245 L250 215 L290 190 L330 170 L370 145" fill="none" stroke="url(#goldLine)" stroke-width="1.5" stroke-dasharray="4 2" stroke-linecap="round"/>
+        <!-- Data dots -->
+        <circle cx="250" cy="190" r="4" fill="rgba(30,200,80,0.9)" filter="url(#glow)"/>
+        <circle cx="370" cy="100" r="5" fill="rgba(201,168,76,1)"/>
+        <!-- Horizontal grid lines -->
+        <line x1="20" y1="200" x2="380" y2="200" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="20" y1="250" x2="380" y2="250" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <line x1="20" y1="150" x2="380" y2="150" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+        <!-- Price label -->
+        <rect x="340" y="84" width="52" height="20" rx="3" fill="rgba(201,168,76,0.2)" stroke="rgba(201,168,76,0.5)" stroke-width="0.5"/>
+        <text x="366" y="98" text-anchor="middle" fill="rgba(201,168,76,0.95)" font-size="9" font-family="monospace" font-weight="bold">+24.8%</text>
+      </svg>
+      <div class="project-year">2025</div>
+      <div class="project-inner">
+        <div class="project-cat">FinTech</div>
+        <div class="project-name">WealthTrack Pro</div>
+        <p class="project-desc">Real-time portfolio tracker with smart alerts, tax optimization insights, and broker API sync.</p>
+        <div class="project-badge">View Case Study</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<div class="testimonial-section">
+  <div class="testimonial-inner">
+    <p class="testimonial-quote" id="testimonialQuote">"BuildStacks didn't just build our app — they transformed the way we think about our product. The attention to detail was unlike anything we'd experienced."</p>
+    <div class="testimonial-author" id="testimonialAuthor">— Arjun Mehta, Founder of IronForge</div>
+    <div class="testimonial-dots">
+      <div class="t-dot active" onclick="setTestimonial(0)"></div>
+      <div class="t-dot" onclick="setTestimonial(1)"></div>
+      <div class="t-dot" onclick="setTestimonial(2)"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-eyebrow reveal">Ready to Begin?</div>
+  <h2 class="cta-title reveal" style="transition-delay:0.1s">
+    Let's Build<br/>Something <em>Legendary.</em>
+  </h2>
+  <div class="cta-actions reveal" style="transition-delay:0.2s">
+    <a href="#work" class="btn-primary"><span>View Our Work ↗</span></a>
+    <a href="#services" class="btn-outline">Our Services</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-mark"></div>
+        BuildStacks
+      </div>
+      <p class="footer-tagline">Boutique app development for brands that refuse to be ordinary.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Services</h4>
+        <span>Mobile Apps</span>
+        <span>Web Platforms</span>
+        <span>UI/UX Design</span>
+        <span>MVP Launch</span>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#about">About</a>
+        <a href="#work">Our Work</a>
+        <a href="#process">Process</a>
+        <a href="#services">Services</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <span><a href="/cdn-cgi/l/email-protection#cfa1aaa8babca7baad8fa8a2aea6a3e1aca0a2" style="color:inherit;text-decoration:none;"><span class="__cf_email__" data-cfemail="caa4afadbfb9a2bfa88aada7aba3a6e4a9a5a7">[email&#160;protected]</span></a></span>
+        <span>Punjab, India</span>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2025 BuildStacks. All rights reserved.</div>
+    <div class="footer-socials">
+      <span class="social-link">𝕏</span>
+      <span class="social-link">in</span>
+      <span class="social-link">ig</span>
+      <span class="social-link">▶</span>
+    </div>
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+  function animateCursor() {
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  animateCursor();
+  document.querySelectorAll('a, button, .service-card, .project-card, .t-dot').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '20px'; cursor.style.height = '20px';
+      ring.style.width = '60px'; ring.style.height = '60px';
+      ring.style.borderColor = 'rgba(201,168,76,0.8)';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px'; cursor.style.height = '12px';
+      ring.style.width = '40px'; ring.style.height = '40px';
+      ring.style.borderColor = 'rgba(201,168,76,0.5)';
+    });
+  });
+
+  // NAV SCROLL
+  window.addEventListener('scroll', () => {
+    document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // REVEAL
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(r => observer.observe(r));
+
+  // TESTIMONIALS
+  const testimonials = [
+    { quote: '"BuildStacks didn\'t just build our app — they transformed the way we think about our product. The attention to detail was unlike anything we\'d experienced."', author: '— Arjun Mehta, Founder of IronForge' },
+    { quote: '"From concept to App Store in 6 weeks. The team at BuildStacks operates at a level that\'s simply rare to find anywhere."', author: '— Priya Sharma, CEO of LuxeMarket' },
+    { quote: '"Our app has 50,000 active users and zero critical bugs post-launch. That\'s the BuildStacks standard."', author: '— Rohan Kapoor, WealthTrack Pro' }
+  ];
+  let activeT = 0;
+  function setTestimonial(i) {
+    activeT = i;
+    const q = document.getElementById('testimonialQuote');
+    const a = document.getElementById('testimonialAuthor');
+    q.style.opacity = a.style.opacity = '0';
+    setTimeout(() => {
+      q.textContent = testimonials[i].quote;
+      a.textContent = testimonials[i].author;
+      q.style.transition = a.style.transition = 'opacity 0.5s';
+      q.style.opacity = a.style.opacity = '1';
+    }, 300);
+    document.querySelectorAll('.t-dot').forEach((d, idx) => d.classList.toggle('active', idx === i));
+  }
+  setInterval(() => setTestimonial((activeT + 1) % 3), 5000);
+
+  // HAMBURGER MENU
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+    document.getElementById('hamburger').classList.toggle('open');
+  }
+  function updateNav() {
+    const cta = document.getElementById('desktopCta');
+    const burger = document.getElementById('hamburger');
+    if (window.innerWidth > 768) {
+      cta.style.display = 'block';
+      burger.style.display = 'none';
+    } else {
+      cta.style.display = 'none';
+      burger.style.display = 'flex';
+    }
+  }
+  updateNav();
+  window.addEventListener('resize', updateNav);
+</script>
+</body>
+</html>
